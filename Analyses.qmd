@@ -1,0 +1,217 @@
+---
+title: "Valence_PM_thoughts"
+author: "Francesco Pupillo"
+format:
+  html:
+    toc: true
+    code-fold: true
+execute:
+  echo: true
+  warnings: false
+  message: false
+project:
+  type: website
+  output-dir: docs
+---
+
+## Valence-PM-thoughts project
+Script of the analyses 
+"Intrusive Thoughts Mediate the Links Between Affective Valence and Prospective Memory"
+
+```{r}
+#| message: false
+#| warning: false
+
+rm(list= ls())
+source("R/0.get_packages.R")
+
+```
+
+```{r}
+# change some parameters for plotting
+params<-
+  theme(
+    plot.title = element_text(size = 25),
+    axis.title.x = element_text(size = 20),
+    axis.title.y = element_text(size = 20),
+    axis.text=element_text(size=16),
+    legend.text=element_text(size=rel(2)),
+    legend.title = element_text(size=rel(2)), 
+    strip.text.x = element_text(size=15)
+  )
+
+# use colour-blind friendly palette
+okabe_ito <- c("YA" = "#0072B2",  # blue
+               "OA" = "#D55E00")  # vermillion
+
+
+# use the labeller
+lab_valence <- ggplot2::as_labeller(c(
+  post_induction = "Post-induction Change",
+  post_task      = "Post-task Change"
+))
+```
+
+
+```{r}
+#| include: false
+# extract valence and PM from raw data\
+#| message: false
+#| warning: false
+#| 
+# get the helper function to extract the rt
+source("helper_functions/extract_rt.R")
+
+# now source the script that extract the data
+source("R/1.extract_files.R")
+
+```
+
+## 
+Five participants who did not belong to the age range of both YA and OA were excluded
+```{r}
+#------------------------------------------------------------------------------#
+# Import datasets and exclude participants
+#------------------------------------------------------------------------------#
+# import the spss dataset
+df_wide<-read.csv("group_data/df_wide.csv")
+#df_long<-read.csv("group_data/df_long.csv")
+
+# get the spss file
+spss_data<-read_spss("PM final data.sav"  )
+#------------------------------------------------------------------------------#
+
+#------------------------------------------------------------------------------#
+# create age variable
+df_wide$agegroup<-ifelse(df_wide$agegroup==1, "YA", "OA")
+#df_long$agegroup<-ifelse(df_long$agegroup==1, "YA", "OA")
+spss_data$AgeGroup<-ifelse(spss_data$AgeGroup==1, "YA", "OA")
+
+single_part<- df_wide %>%
+  group_by(participant) %>%
+  slice(1)
+
+print(paste("Total number of participants is", nrow(single_part)))
+
+# plot the distribution of age as a function of agegroup
+spss_data$AgeGroup<-factor(spss_data$AgeGroup, levels = c("YA", "OA"))
+
+# exclude participants who do not belong to the classical age range
+age_excl<-spss_data$Nb[(spss_data$Age>35 & spss_data$AgeGroup=="YA") |
+                        (spss_data$Age<60 & spss_data$AgeGroup=="OA") ]
+
+# exclude those participants 
+spss_data<-spss_data[!spss_data$Nb %in% age_excl,]
+df_wide<-df_wide[!df_wide$participant %in% age_excl,]
+single_part<-single_part[!single_part$participant %in% age_excl,]
+#df_long<-df_long[!df_long$participant %in% age_excl,]
+
+
+age_plot<-ggplot(spss_data, aes(x = Age))+
+  geom_histogram()+
+  facet_wrap(.~AgeGroup)+
+  theme_classic()
+
+print(age_plot)
+
+# check the number of participants
+kable(df_wide %>%
+        group_by(participant) %>%
+        slice(1) %>%
+        group_by( agegroup)%>%
+        tally())
+
+#--------------------
+
+```
+
+
+
+## Sociodemographics
+First, apply exclusion for participants who do not belong to the age range
+and get demographics
+```{r}
+source("R/2.sociodemographics.R")
+
+kable(gender_part, caption = "Gender by Agegroup")
+
+kable(part_demo, caption = "Sociodemographics")
+
+```
+
+## Sociodemographics
+Compare the sociodemographics between young and old
+```{r}
+source("R/3.compare_sociodemo.R")
+
+summary(mod_health)
+
+summary(mod_educat)
+
+summary(mill_hill)
+
+summary(digit_symbol)
+
+# create a contingency table to check whther the distribution of gender is equal
+contingency_table_gender<-table(single_part[, c("agegroup", "gender")])
+chi_square_test <- chisq.test(contingency_table_gender)
+chi_square_test
+
+```
+
+Valence reshaped
+```{r}
+# now call  the script to the reshape the valence
+source("R/4.valence_reshape.R")
+
+# participant check
+# check the number of participants
+kable(long_df_valence %>%
+        group_by(participant) %>%
+        slice(1) %>%
+        group_by( agegroup)%>%
+        tally())
+
+kable(long_df_valence_diff %>%
+        group_by(participant) %>%
+        slice(1) %>%
+        group_by( agegroup)%>%
+        tally())
+
+
+```
+
+Preprocessing of valence. 
+Derivation of post-induction and post valence measures and visualization
+```{r}
+source("R/5.valence_preproc.R")
+```
+## Valence analyses
+```{r}
+source("R/6.valence_analysis.R")
+```
+
+
+## PM analysis
+```{r}
+source("helper_functions/logit_transform.R")
+
+
+source("R/7.PM_main_analysis.R")
+
+```
+
+## Intrusive thoughts
+
+```{r}
+source("R/8.intrusive_thoughts.R")
+```
+
+## Mediation analyses
+```{r}
+#| warning: false
+source("R/9.mediations.R")
+```
+
+
+

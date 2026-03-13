@@ -1,0 +1,195 @@
+"word","corrAnsw","trial_type","cues","slider_mood.response","slider_arousal.response","key_resp_ongoing.corr","key_resp_ongoing.rt","key_resp_PM.rt","key_resp_PM.keys","key_resp_PM.corr","key_resp_recognition.corr","participant","session"
+"","","","",14,88,NA,"","","",NA,NA,106,3
+"","","","",NA,NA,NA,"","","",NA,NA,106,3
+"","","","",NA,NA,NA,"","","",NA,NA,106,3
+"","","","",NA,NA,NA,"","","",NA,NA,106,3
+"","","","",NA,NA,NA,"","","",NA,NA,106,3
+"","","","",NA,NA,NA,"","","",NA,NA,106,3
+"","","","",NA,NA,NA,"","","",NA,NA,106,3
+"voyage","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"tower","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"voyage","d","HIT","",NA,NA,NA,"","","",NA,NA,106,3
+"book","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"tower","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"book","d","HIT","",NA,NA,NA,"","","",NA,NA,106,3
+"dress","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"fork","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"crime","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"fork","d","HIT","",NA,NA,NA,"","","",NA,NA,106,3
+"memory","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"dress","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"memory","d","HIT","",NA,NA,NA,"","","",NA,NA,106,3
+"blond","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"crime","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"blond","d","HIT","",NA,NA,NA,"","","",NA,NA,106,3
+"","","","",NA,NA,NA,"","","",NA,NA,106,3
+"voyage","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"tower","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"voyage","d","HIT","",NA,NA,NA,"","","",NA,NA,106,3
+"book","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"tower","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"book","d","HIT","",NA,NA,NA,"","","",NA,NA,106,3
+"dress","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"fork","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"crime","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"fork","d","HIT","",NA,NA,NA,"","","",NA,NA,106,3
+"memory","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"dress","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"memory","d","HIT","",NA,NA,NA,"","","",NA,NA,106,3
+"blond","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"crime","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"blond","d","HIT","",NA,NA,NA,"","","",NA,NA,106,3
+"","","","",NA,NA,NA,"","","",NA,NA,106,3
+"voyage","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"tower","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"voyage","d","HIT","",NA,NA,NA,"","","",NA,NA,106,3
+"book","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"tower","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"book","d","HIT","",NA,NA,NA,"","","",NA,NA,106,3
+"dress","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"fork","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"crime","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"fork","d","HIT","",NA,NA,NA,"","","",NA,NA,106,3
+"memory","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"dress","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"memory","d","HIT","",NA,NA,NA,"","","",NA,NA,106,3
+"blond","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"crime","l","No","",NA,NA,NA,"","","",NA,NA,106,3
+"blond","d","HIT","",NA,NA,NA,"","","",NA,NA,106,3
+"","","","",NA,NA,NA,"","","",NA,NA,106,3
+"","","","",NA,NA,NA,"","","",NA,NA,106,3
+"elbow","l","No","",NA,NA,1,"[1.390659600001527]","","",NA,NA,106,3
+"ambition","l","No","",NA,NA,1,"[0.9340066000004299]","","",NA,NA,106,3
+"elbow","d","HIT","",NA,NA,1,"[0.6836896000022534]","","",NA,NA,106,3
+"salad","l","No","",NA,NA,1,"[0.8504510000057053]","","",NA,NA,106,3
+"door","l","No","",NA,NA,1,"[0.9506815000204369]","","",NA,NA,106,3
+"salad","d","HIT","",NA,NA,1,"[1.1839260999986436]","","",NA,NA,106,3
+"tool","l","No","",NA,NA,1,"[0.8838556999980938]","","",NA,NA,106,3
+"health","l","No","",NA,NA,1,"[1.0001720000000205]","","",NA,NA,106,3
+"ambition","l","No","",NA,NA,1,"[0.7836150999937672]","","",NA,NA,106,3
+"health","d","HIT","",NA,NA,0,"[0.8836844000034034]","","",NA,NA,106,3
+"vest","l","No","",NA,NA,1,"[2.017131900007371]","","",NA,NA,106,3
+"ugly","l","No","",NA,NA,1,"[1.0505873000074644]","","",NA,NA,106,3
+"vest","d","HIT","",NA,NA,1,"[0.8338833000161685]","","",NA,NA,106,3
+"face","l","No","",NA,NA,1,"[0.8673424999869894]","","",NA,NA,106,3
+"rock","l","No","",NA,NA,1,"[0.9007084000040777]","","",NA,NA,106,3
+"face","d","HIT","",NA,NA,1,"[1.150046900002053]","","",NA,NA,106,3
+"bowl","l","No","",NA,NA,1,"[0.7334872999927029]","","",NA,NA,106,3
+"key","l","No","",NA,NA,1,"[1.2836946999887004]","","",NA,NA,106,3
+"bowl","d","HIT","",NA,NA,1,"[1.3840072000166401]","","",NA,NA,106,3
+"moment","l","No","",NA,NA,1,"[0.7171959000115748]","","",NA,NA,106,3
+"useful","l","No","",NA,NA,1,"[1.4173370999924373]","","",NA,NA,106,3
+"moment","d","HIT","",NA,NA,1,"[0.9838706000009552]","","",NA,NA,106,3
+"water","l","No","",NA,NA,1,"[1.6498533000121824]","","",NA,NA,106,3
+"coast","l","No","",NA,NA,1,"[0.7671452999929897]","","",NA,NA,106,3
+"key","l","No","",NA,NA,0,"[1.2837819000124]","","",NA,NA,106,3
+"coast","d","HIT","",NA,NA,1,"[1.4835144000244327]","","",NA,NA,106,3
+"plain","l","No","",NA,NA,1,"[1.4837468000187073]","","",NA,NA,106,3
+"rock","l","No","",NA,NA,0,"[1.333653800014872]","","",NA,NA,106,3
+"plain","d","HIT","",NA,NA,1,"[1.2836613999970723]","","",NA,NA,106,3
+"trunk","l","No","",NA,NA,1,"[0.7002548000018578]","","",NA,NA,106,3
+"door","l","No","",NA,NA,1,"[1.4338394000078551]","","",NA,NA,106,3
+"trunk","d","HIT","",NA,NA,1,"[1.0338768000074197]","","",NA,NA,106,3
+"nervous","l","No","",NA,NA,1,"[1.0341487000114284]","","",NA,NA,106,3
+"useful","l","No","",NA,NA,1,"[0.9672762000118382]","","",NA,NA,106,3
+"nervous","d","HIT","",NA,NA,0,"[1.1506930000032298]","","",NA,NA,106,3
+"quick","l","No","",NA,NA,1,"[1.583431400009431]","","",NA,NA,106,3
+"tool","l","No","",NA,NA,1,"[0.8006910999829415]","","",NA,NA,106,3
+"quick","d","HIT","",NA,NA,1,"[1.5506829000078142]","","",NA,NA,106,3
+"water","l","No","",NA,NA,1,"[0.9836486999993213]","","",NA,NA,106,3
+"ugly","l","No","",NA,NA,1,"[1.1169313999998849]","","",NA,NA,106,3
+"","","","teacher",NA,NA,NA,"","","",NA,NA,106,3
+"","","","wagon",NA,NA,NA,"","","",NA,NA,106,3
+"","","","curious",NA,NA,NA,"","","",NA,NA,106,3
+"","","","wagon",NA,NA,NA,"","","",NA,NA,106,3
+"","","","teacher",NA,NA,NA,"","","",NA,NA,106,3
+"","","","curious",NA,NA,NA,"","","",NA,NA,106,3
+"","","","",12,87,NA,"","","",NA,NA,106,3
+"","","","",46,69,NA,"","","",NA,NA,106,3
+"queen","l","No","",NA,NA,NA,"","[]","None",0,NA,106,3
+"butter","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"queen","d","HIT","",NA,NA,NA,"","[1.6838391000055708]","['d']",1,NA,106,3
+"plant","l","No","",NA,NA,NA,"","[]","None",0,NA,106,3
+"fear","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"plant","d","HIT","",NA,NA,NA,"","[0.9335201000212692]","['d']",1,NA,106,3
+"army","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"chair","l","No","",NA,NA,NA,"","[]","None",0,NA,106,3
+"army","d","HIT","",NA,NA,NA,"","[1.1505145000119228]","['d']",1,NA,106,3
+"moral","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"reserved","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"wagon","h","PM cue","",NA,NA,NA,"","[1.550200700003188]","['h']",1,NA,106,3
+"reserved","d","HIT","",NA,NA,NA,"","[1.4172535999969114]","['d']",1,NA,106,3
+"fight","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"bench","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"fight","d","HIT","",NA,NA,NA,"","[1.283714700024575]","['d']",1,NA,106,3
+"space","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"autumn","l","No ","",NA,NA,NA,"","[0.9503137999854516]","['d']",0,NA,106,3
+"space","d","HIT","",NA,NA,NA,"","[1.3171422999876086]","['d']",1,NA,106,3
+"green","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"nice","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"green","d","HIT","",NA,NA,NA,"","[1.3171106999798212]","['d']",1,NA,106,3
+"chair","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"teacher","h","PM cue","",NA,NA,NA,"","[1.30046399999992]","['h']",1,NA,106,3
+"delayed","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"restaurant","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"delayed","d","HIT","",NA,NA,NA,"","[1.3339856999809854]","['d']",1,NA,106,3
+"hammer","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"absurd","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"hammer","d","HIT","",NA,NA,NA,"","[1.183628700004192]","['d']",1,NA,106,3
+"basket","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"method","l","No","",NA,NA,NA,"","[]","None",0,NA,106,3
+"basket","d","HIT","",NA,NA,NA,"","[1.1167673000018112]","['d']",1,NA,106,3
+"lantern","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"hope","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"lantern","d","HIT","",NA,NA,NA,"","[2.216921799990814]","['d']",1,NA,106,3
+"curious","h","PM cue","",NA,NA,NA,"","[1.6003998999949545]","['h']",1,NA,106,3
+"innocent","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"autumn","l","No","",NA,NA,NA,"","[2.267000799998641]","['d']",0,NA,106,3
+"innocent","d","HIT","",NA,NA,NA,"","[1.2665641999919899]","['d']",1,NA,106,3
+"wine","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"method","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"wine","d","HIT","",NA,NA,NA,"","[1.0002302000066265]","['d']",1,NA,106,3
+"sleep","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"fear","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"sleep","d","HIT","",NA,NA,NA,"","[1.250508400000399]","['d']",1,NA,106,3
+"machine","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"chance","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"machine","d","HIT","",NA,NA,NA,"","[0.9337075999937952]","['d']",1,NA,106,3
+"hope","l","No","",NA,NA,NA,"","[]","None",0,NA,106,3
+"wagon","h","PM cue","",NA,NA,NA,"","[1.2169513999833725]","['h']",1,NA,106,3
+"hotel","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"bench","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"hotel","d","HIT","",NA,NA,NA,"","[1.0503712000208907]","['d']",1,NA,106,3
+"paint","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"nice","l","No","",NA,NA,NA,"","[]","None",0,NA,106,3
+"paint","d","HIT","",NA,NA,NA,"","[0.9006306999945082]","['d']",1,NA,106,3
+"learn","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"hungry","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"curious","h","PM cue","",NA,NA,NA,"","[1.5004697999975178]","['h']",1,NA,106,3
+"hungry","d","HIT","",NA,NA,NA,"","[]","None",0,NA,106,3
+"absurd","l","No","",NA,NA,NA,"","[]","None",0,NA,106,3
+"moral","l","No","",NA,NA,NA,"","[]","None",0,NA,106,3
+"shadow","l","No","",NA,NA,NA,"","[]","None",0,NA,106,3
+"office","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"shadow","d","HIT","",NA,NA,NA,"","[1.2503931999963243]","['d']",1,NA,106,3
+"office","d","HIT","",NA,NA,NA,"","[]","None",0,NA,106,3
+"brave","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"learn","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"brave","d","HIT","",NA,NA,NA,"","[1.0176251000084449]","['d']",1,NA,106,3
+"exercise","l","No ","",NA,NA,NA,"","[]","None",0,NA,106,3
+"chance","l","No","",NA,NA,NA,"","[]","None",0,NA,106,3
+"exercise","d","HIT","",NA,NA,NA,"","[]","None",0,NA,106,3
+"teacher","h","PM cue","",NA,NA,NA,"","[1.1507320000091568]","['h']",1,NA,106,3
+"identity","l","No","",NA,NA,NA,"","[]","None",0,NA,106,3
+"butter","l","No","",NA,NA,NA,"","[]","None",0,NA,106,3
+"identity","d","HIT","",NA,NA,NA,"","[1.1503576000104658]","['d']",1,NA,106,3
+"theory","l","No","",NA,NA,NA,"","[]","None",0,NA,106,3
+"restaurant","l","No","",NA,NA,NA,"","[]","None",0,NA,106,3
+"theory","d","HIT","",NA,NA,NA,"","[]","None",0,NA,106,3
+"nice","l","No","",31,73,NA,"","","",NA,1,106,3
+"office","l","No","",NA,NA,NA,"","","",NA,1,106,3
+"wagon","d","HIT","",NA,NA,NA,"","","",NA,0,106,3
+"machine","l","No","",NA,NA,NA,"","","",NA,1,106,3
+"curious","d","HIT","",NA,NA,NA,"","","",NA,1,106,3
+"teacher","d","HIT","",NA,NA,NA,"","","",NA,1,106,3
+"","","","",31,70,NA,"","","",NA,NA,NA,NA
