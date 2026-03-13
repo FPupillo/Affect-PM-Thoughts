@@ -65,4 +65,5 @@ emmip(mod_valence, agegroup ~ cond | valence_measure, CIs = TRUE) +
     labeller = lab_valence
   )
 )
+
 ggsave("Write_up/figures/valence_all_contrasts.png", width = 12, height = 6, dpi = 300)

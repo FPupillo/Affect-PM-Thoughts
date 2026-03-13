@@ -5,13 +5,11 @@ format:
   html:
     toc: true
     code-fold: true
+    output-file: index.html
 execute:
   echo: true
   warnings: false
   message: false
-project:
-  type: website
-  output-dir: docs
 ---
 
 ## Valence-PM-thoughts project
@@ -55,10 +53,13 @@ lab_valence <- ggplot2::as_labeller(c(
 
 ```{r}
 #| include: false
-# extract valence and PM from raw data\
 #| message: false
 #| warning: false
-#| 
+
+ 
+# now source the script that extract the data
+source("R/0.get_packages.R")
+
 # get the helper function to extract the rt
 source("helper_functions/extract_rt.R")
 
@@ -75,10 +76,9 @@ Five participants who did not belong to the age range of both YA and OA were exc
 #------------------------------------------------------------------------------#
 # import the spss dataset
 df_wide<-read.csv("group_data/df_wide.csv")
-#df_long<-read.csv("group_data/df_long.csv")
 
 # get the spss file
-spss_data<-read_spss("PM final data.sav"  )
+spss_data<-read.csv("PM final data.csv"  )
 #------------------------------------------------------------------------------#
 
 #------------------------------------------------------------------------------#
