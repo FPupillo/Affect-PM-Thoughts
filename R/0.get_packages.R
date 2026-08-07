@@ -18,7 +18,10 @@ required_packages <- c("ggplot2",
                        "sjPlot", # to use "tab_model"
                        "effectsize", # to  get the effect sizes
                        "emmeans", # estimated margina.l means
-                       "ggeffects"# to use the "predict" formula
+                       "ggeffects",# to use the "predict" formula
+                       "parameters", # for standardized coefficients, 
+                       "interactions", # for the interaction plots
+                       "psych"# for correlation test
                        )
 
 # Check and install missing packages

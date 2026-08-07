@@ -65,7 +65,8 @@ model_aft_pm <- paste( '
 
 
 fit_after_PM <- sem(model = model_aft_pm, data = 
-                      long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26) ,], cluster = "participant")
+                      long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26) ,], cluster = "participant", 
+                    standardized = T)
 print(
 summary(fit_after_PM, std=T)
 )

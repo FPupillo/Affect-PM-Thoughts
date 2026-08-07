@@ -41,12 +41,12 @@ tab_model(mod_thoughts_PM_OA)
 # plot after PM
 p1<-ggplot(long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26) ,], 
        aes( x=tcaq_g, y=  PM_task_lenient_av, colour = agegroup))+
-  geom_smooth(method="lm",formula=y~x, se=T)+
-  ylab("General ")+
+  ylab("PM Performance")+
   xlab("General intrusive thoughts")+
   scale_color_manual(
     values = okabe_ito)+
   scale_fill_manual( values =  okabe_ito)+
+  geom_smooth(method="lm",formula=y~x, se=T)+
   params+
   labs( color = "Age group"  )+ 
   # add the "smooth" line, which the regression method ('l,')
@@ -80,7 +80,7 @@ p2<-ggplot(long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26) 
 
 
 ggpubr::ggarrange(p1, p2, ncol = 2, common.legend = TRUE, legend = "bottom",
-                  labels = c("a)", "b)"), 
+                  #labels = c("a)", "b)"), 
                   font.label = list(size = 24, face = "bold"), 
                   label.x = -0.02, label.y = 0.98)
 
@@ -207,15 +207,41 @@ anova(mod_thouhgts_task)
 
 eta_squared(mod_thouhgts_task, partial = T, altenative = "two.sided")
 #------------------------------------------------------------------------------#
+# did generatl and task-specific thoughts were influenced by cognitive ability?
+mod_thouhgts_gen_DS<-lm(tcaq_g~agegroup.c*DS, 
+                     long_df_part[ (is.na(long_df_part$MOCA)|long_df_part$MOCA>=26) ,])
 
-mod__valence_thougths<-lmer(c_tcaq~valence_aftIND_min_bef.s*agegroup.c+ aft_PM_minus_after_ind.s*agegroup.c+
-                              
-                              (1|participant), 
-                            data = long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26) ,],
-                            control =  lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 100000)))
+summary(mod_thouhgts_gen_DS)
+Anova(mod_thouhgts_gen_DS, type=2)
 
-summary(mod__valence_thougths)
-anova(mod__valence_thougths, type = 2, ddf = "Kenward-Roger")
+# center DS
+long_df_merged$DS.c<-scale(long_df_merged$DS)
+mod_thouhgts_task_DS<-lmer(c_tcaq~DS.c*agegroup+
+                          (1|participant), 
+                        long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26) ,])
+
+summary(mod_thouhgts_task_DS)
+vif(mod_thouhgts_task_DS)
+tab_model(mod_thouhgts_task_DS)
+
+Anova(mod_thouhgts_task_DS, type=3)
+
+
+interact_plot(mod_thouhgts_task_DS,
+           
+              pred = DS.c,
+      
+              modx = agegroup,
+       
+              interval = TRUE,
+              legend.main = "Age group"
+              )+
+  labs(x = "Fluid intelligence (centered)", 
+       y = " Intrusive thoughts during task")+
+  theme_classic()+
+  labs(colour = "Age group")
+
+eta_squared(mod_thouhgts_task_DS, partial = T, altenative = "two.sided")
 #------------------------------------------------------------------------------#
 
 # try a three way interaction with age, tcaq_g, and tcaq_c
@@ -227,7 +253,7 @@ long_df_merged$tcaq_g.s<-scale(long_df_merged$tcaq_g)
 long_df_merged$c_tcaq.s<-scale(long_df_merged$c_tcaq)
 
 
-mod_thouhgts_gen_PM_int<-lmer(PM_task_lenient_av_log~tcaq_g.s*agegroup.c*c_tcaq.s+
+mod_thouhgts_gen_PM_int<-lmer(PM_task_lenient_av_log~tcaq_g.s*agegroup.c*c_tcaq.s+DS*agegroup.c+
                             (1|participant), 
                           long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26) ,])
 
@@ -239,3 +265,20 @@ print(
 anova(mod_thouhgts_gen_PM, type =3)
 
 eta_squared(mod_thouhgts_gen_PM, partial = T, altenative = "two.sided")
+
+# what if we control for DS?
+
+mod_thouhgts_gen_DS<-lm(tcaq_g~DS*agegroup.c, 
+                     long_df_part[ (is.na(long_df_part$MOCA)|long_df_part$MOCA>=26) ,])
+
+summary(mod_thouhgts_gen_DS)
+
+Anova(mod_thouhgts_gen_DS, type = 3)
+
+mod__valence_DS<-lmer(valence_aftIND_min_bef.s~cond*DS+
+                              (1|participant), 
+                            data = long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26) ,],
+                            control =  lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 100000)))
+summary(mod__valence_DS)
+
+anova(mod__valence_DS)

@@ -47,6 +47,9 @@ emm_mean2<-emmeans(mod_valence, ~ cond | valence_measure )
 pairs(emm_mean2,
       
       adjust = "bonferroni")
+
+print(emm_mean2)
+
 print(
 emmip(mod_valence, agegroup ~ cond | valence_measure, CIs = TRUE) +
   theme_minimal() + labs(y = "Estimated valence", x = "Condition", color = "Age group")+

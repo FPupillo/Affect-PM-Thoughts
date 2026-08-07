@@ -5,9 +5,9 @@
 
 #------------------------------------------------------------------------------#
 # reshape the dataframe to have valence and arousal repeated
-variables_to_keep<-c("participant" ,"cond" ,  "MOCA" ,                
-                     "c_tcaq" ,"tcaq_g", "agegroup" , 
-                     "OT_task_only" ,  "DS" , "Mill_Hill"   ,
+variables_to_keep<-c("participant" ,"cond" , "order", "MOCA" ,                
+                     "c_tcaq" ,"tcaq_g", "agegroup" ,"health", 
+                     "OT_task_only" ,  "DS" , "Mill_Hill", "education_y",
                      "OT_task_PM" , "PM_cost", "PM_task_av" , 
                      "PM_task_lenient_av","recog_task_av"
                     )

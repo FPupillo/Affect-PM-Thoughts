@@ -26,16 +26,18 @@ source("R/0.get_packages.R")
 ```
 
 ```{r}
+#| message: false
+#| warning: false
 # change some parameters for plotting
 params<-
   theme(
-    plot.title = element_text(size = 25),
-    axis.title.x = element_text(size = 20),
-    axis.title.y = element_text(size = 20),
-    axis.text=element_text(size=16),
-    legend.text=element_text(size=rel(2)),
-    legend.title = element_text(size=rel(2)), 
-    strip.text.x = element_text(size=15)
+    plot.title = element_text(size = 35),
+    axis.title.x = element_text(size = 28),
+    axis.title.y = element_text(size = 28),
+    axis.text=element_text(size=26),
+    legend.text=element_text(size=rel(4)),
+    legend.title = element_text(size=rel(4)), 
+    strip.text.x = element_text(size=25)
   )
 
 # use colour-blind friendly palette
@@ -56,9 +58,7 @@ lab_valence <- ggplot2::as_labeller(c(
 #| message: false
 #| warning: false
 
- 
-# now source the script that extract the data
-source("R/0.get_packages.R")
+
 
 # get the helper function to extract the rt
 source("helper_functions/extract_rt.R")
@@ -71,11 +71,64 @@ source("R/1.extract_files.R")
 ## 
 Five participants who did not belong to the age range of both YA and OA were excluded
 ```{r}
+#| message: false
+#| warning: false
 #------------------------------------------------------------------------------#
 # Import datasets and exclude participants
 #------------------------------------------------------------------------------#
 # import the spss dataset
 df_wide<-read.csv("group_data/df_wide.csv")
+
+# now we need to add the order of the conditions, i.e. which condition is presented
+# first, which one second, and which one third
+# there are six conditions, repeated within participants.
+# they can be found in the files "Age, Mood and PM Project Participant Code.xlsx
+# They are the following
+
+conditions <- matrix(
+  c(
+    "Positive", "Negative", "Neutral",
+    "Positive", "Neutral",  "Negative",
+    "Negative", "Positive", "Neutral",
+    "Negative", "Neutral",  "Positive",
+    "Neutral",  "Negative", "Positive",
+    "Neutral",  "Positive", "Negative"
+  ),
+  
+  nrow = 6,
+  byrow = TRUE
+)
+
+# I need to repeat it 11 times to get all participants
+cond_all<-conditions[rep(1:nrow(conditions), 11), ]
+
+# get the order variable
+df_wide$order<-NA
+for (n in 1:nrow(df_wide)){ # loop through the observations (conditions)
+  
+  if (df_wide$participant[n]<100){ # if participant number was not modified
+    
+    c_order<- cond_all[df_wide$participant[n],]
+    
+    # in which position is that condition for that participant?
+    c_num<-which(c_order == df_wide$cond[n])
+    
+    
+  } else { # if we added 100 to the participants (older adults) to distinguish
+    # them from the YA
+    
+    c_order<- cond_all[df_wide$participant[n]-100,]
+    
+    c_num<-which(c_order == df_wide$cond[n])
+    
+  }
+  
+  df_wide$order[n]<-c_num
+  
+  
+  
+}
+
 
 # get the spss file
 spss_data<-read.csv("PM final data.csv"  )
@@ -142,6 +195,8 @@ kable(part_demo, caption = "Sociodemographics")
 ## Sociodemographics
 Compare the sociodemographics between young and old
 ```{r}
+#| message: false
+#| warning: false
 source("R/3.compare_sociodemo.R")
 
 summary(mod_health)
@@ -161,6 +216,8 @@ chi_square_test
 
 Valence reshaped
 ```{r}
+#| message: false
+#| warning: false
 # now call  the script to the reshape the valence
 source("R/4.valence_reshape.R")
 
@@ -184,26 +241,145 @@ kable(long_df_valence_diff %>%
 Preprocessing of valence. 
 Derivation of post-induction and post valence measures and visualization
 ```{r}
+#| message: false
+#| warning: false
 source("R/5.valence_preproc.R")
 ```
 ## Valence analyses
 ```{r}
+#| message: false
+#| warning: false
 source("R/6.valence_analysis.R")
+```
+
+## additional arousal analysis
+```{r}
+#| message: false
+#| warning: false
+#| include: false
+source("R/6S.arousal_analysis.R")
+
 ```
 
 
 ## PM analysis
 ```{r}
+#| message: false
+#| warning: false
 source("helper_functions/logit_transform.R")
 
 
 source("R/7.PM_main_analysis.R")
 
+# check if the order (repetition) of the task affected PM
+long_df_merged$order<-as.numeric(long_df_merged$order)
+
+# center order
+long_df_merged$order_c<-ifelse(long_df_merged$order==1, -1, 
+                               ifelse(long_df_merged$order==2, 0, 
+                                      1))
+
+long_df_merged$DS.c<-scale(long_df_merged$DS)
+
+long_df_merged$Mill_Hill.c<-scale(long_df_merged$Mill_Hill)
+
+
+reg.s_order<-lmer(PM_task_lenient_av_log~order_c*agegroup.c+DS.c+Mill_Hill.c+aft_PM_minus_after_ind.s*agegroup.c + 
+              valence_aftIND_min_bef.s*agegroup.c+(1+order_c|participant), 
+            data = long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26),])
+summary(reg.s_order)
+
+tab_model(reg.s_order, file = "main_regression_table.html")
+
+
+anova(reg.s_order)
+
+
+vif(reg.s_order)
+
+eta_squared(reg.s_order, partial = T, alternative = "two.sided")
+
+# check the interaction between age and DS
+age_DS<-lmer(PM_task_lenient_av_log~agegroup*DS.c+(1|participant), 
+            data = long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26),])
+
+summary(age_DS)
+
+
+interact_plot(age_DS,
+           
+              pred = DS.c,
+      
+              modx = agegroup,
+       
+              interval = TRUE,
+              legend.main = "Age group"
+              )+
+  labs(x = "Fluid intelligence (centered)", 
+       y = "PM performance")+
+  theme_classic()+
+  labs(colour = "Age group")
+
+# without centering
+reg_order<-lmer(PM_task_lenient_av_log~ +DS+order_c+aft_PM_minus_after_ind*agegroup.c + 
+            valence_aftIND_min_bef*agegroup.c+(1|participant), 
+          data = long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26),])
+
+
+Anova(reg_order, type =2)
+
+
+
+# 1) Predicted curve for post-induction (hold post-task at 0)
+pred_T2T1 <- ggpredict(
+  reg_order,
+  terms = c("valence_aftIND_min_bef", "agegroup.c"),
+  condition = c(aft_PM_minus_after_ind.s = 0)   # set the other predictor to 0 (its natural reference)
+) %>%
+  as_tibble() %>%
+  mutate(measure = "post_induction",
+         x = x)   # keep x for clarity
+
+# 2) Predicted curve for post-task (hold post-induction at 0)
+pred_T3T2 <- ggpredict(
+  reg_order,
+  terms = c("aft_PM_minus_after_ind", "agegroup.c"),
+  condition = c(valence_aftIND_min_bef = 0)
+) %>%
+  as_tibble() %>%
+  mutate(measure = "post_task",
+         x = x)
+
+# 3) Combine and plot
+pred_all <- bind_rows(pred_T2T1, pred_T3T2)
+
+print(
+ggplot(pred_all, aes(x = x, y = predicted, colour = group)) +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group),
+              alpha = 0.15, colour = NA) +
+  geom_line(size = 1) +
+  facet_wrap(~ measure, nrow = 1, labeller = lab_valence) +
+  labs(x = "Valence", y = "Predicted PM accuracy", colour = "Age group", fill = "Age group") +
+  scale_color_manual(values = c("-0.5" = "#0072B2",  # blue
+                                "0.5" = "#D55E00"),  # vermillion, 
+                     labels = c("-0.5" = "YA", "0.5" = "OA")) +
+  #scale_fill_manual(values = c(YA = "darkorange", OA = "darkgreen")) +  # CI ribbons
+  scale_fill_manual(values = c("-0.5" = "#0072B2",  # blue
+                               "0.5" = "#D55E00"),  # vermillion, 
+                    labels = c("-0.5" = "YA", "0.5" = "OA"))  +  # CI ribbons
+  geom_vline(xintercept = 0)+
+  theme_classic()+
+  theme(legend.position = "none")+
+  params
+
+)
 ```
 
 ## Intrusive thoughts
 
 ```{r}
+#| message: false
+#| warning: false
 source("R/8.intrusive_thoughts.R")
 ```
 
@@ -213,5 +389,42 @@ source("R/8.intrusive_thoughts.R")
 source("R/9.mediations.R")
 ```
 
+## Create a correlation table with all the variables
+```{r}
+df_for_corr <- long_df_merged %>%
+
+group_by(participant) %>%
+summarise(
+agegroup = first(agegroup),
+education_y = first(education_y),
+health = first(health),
+fluid_intelligence = first(DS), 
+crystallized_intelligence = first(Mill_Hill),
+general_intrusive_thoughts = first(tcaq_g),
+task_related_intrusive_thoughts = mean(c_tcaq, na.rm = T),
+PM_performance = mean(PM_task_lenient_av, na.rm = T),
+#baseline_valence = first(baseline_valence),
+post_induction_valence_change = mean(valence_aftIND_min_bef, na.rm = TRUE),
+post_task_valence_change = mean(aft_PM_minus_after_ind, na.rm = TRUE),
+)
+
+str(df_for_corr)
+
+# confert age group to numeric
+df_for_corr$agegroup<-ifelse(df_for_corr$agegroup=="YA", -0.5, 0.5)
+cor_tbl<-corr.test(df_for_corr[, 2:ncol(df_for_corr)], use = "pairwise", method = "pearson", adjust = "none")
+
+corr_table <- round(cor_tbl$r, 2)
+p_table <- round(cor_tbl$p, 4)
+
+sink("correlation_table.txt")
+cat("Correlation matrix\n")
+print(round(cor_tbl$r, 2))
+
+cat("\nP-value matrix\n")
+print(round(cor_tbl$p, 4))
+sink()
+
+```
 
 

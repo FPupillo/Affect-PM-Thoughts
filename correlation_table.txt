@@ -1,0 +1,54 @@
+                                agegroup fluid_intelligence crystallized_intelligence general_intrusive_thoughts
+agegroup                            1.00              -0.35                      0.76                      -0.55
+fluid_intelligence                 -0.35               1.00                     -0.24                       0.18
+crystallized_intelligence           0.76              -0.24                      1.00                      -0.35
+general_intrusive_thoughts         -0.55               0.18                     -0.35                       1.00
+task_related_intrusive_thoughts    -0.46              -0.05                     -0.43                       0.58
+PM_performance                     -0.25               0.31                     -0.04                       0.01
+post_induction_valence_change      -0.12               0.01                     -0.08                       0.09
+post_task_valence_change            0.06               0.02                      0.06                      -0.21
+                                task_related_intrusive_thoughts PM_performance post_induction_valence_change post_task_valence_change
+agegroup                                                  -0.46          -0.25                         -0.12                     0.06
+fluid_intelligence                                        -0.05           0.31                          0.01                     0.02
+crystallized_intelligence                                 -0.43          -0.04                         -0.08                     0.06
+general_intrusive_thoughts                                 0.58           0.01                          0.09                    -0.21
+task_related_intrusive_thoughts                            1.00          -0.13                          0.11                    -0.23
+PM_performance                                            -0.13           1.00                         -0.07                     0.22
+post_induction_valence_change                              0.11          -0.07                          1.00                    -0.42
+post_task_valence_change                                  -0.23           0.22                         -0.42                     1.00
+                                agegroup fluid_intelligence crystallized_intelligence general_intrusive_thoughts task_related_intrusive_thoughts
+agegroup                            1.00              -0.35                      0.76                      -0.55                           -0.46
+fluid_intelligence                 -0.35               1.00                     -0.24                       0.18                           -0.05
+crystallized_intelligence           0.76              -0.24                      1.00                      -0.35                           -0.43
+general_intrusive_thoughts         -0.55               0.18                     -0.35                       1.00                            0.58
+task_related_intrusive_thoughts    -0.46              -0.05                     -0.43                       0.58                            1.00
+PM_performance                     -0.25               0.31                     -0.04                       0.01                           -0.13
+post_induction_valence_change      -0.12               0.01                     -0.08                       0.09                            0.11
+post_task_valence_change            0.06               0.02                      0.06                      -0.21                           -0.23
+                                PM_performance post_induction_valence_change post_task_valence_change
+agegroup                                 -0.25                         -0.12                     0.06
+fluid_intelligence                        0.31                          0.01                     0.02
+crystallized_intelligence                -0.04                         -0.08                     0.06
+general_intrusive_thoughts                0.01                          0.09                    -0.21
+task_related_intrusive_thoughts          -0.13                          0.11                    -0.23
+PM_performance                            1.00                         -0.07                     0.22
+post_induction_valence_change            -0.07                          1.00                    -0.42
+post_task_valence_change                  0.22                         -0.42                     1.00
+                                agegroup fluid_intelligence crystallized_intelligence general_intrusive_thoughts task_related_intrusive_thoughts
+agegroup                            1.00              -0.35                      0.76                      -0.55                           -0.46
+fluid_intelligence                 -0.35               1.00                     -0.24                       0.18                           -0.05
+crystallized_intelligence           0.76              -0.24                      1.00                      -0.35                           -0.43
+general_intrusive_thoughts         -0.55               0.18                     -0.35                       1.00                            0.58
+task_related_intrusive_thoughts    -0.46              -0.05                     -0.43                       0.58                            1.00
+PM_performance                     -0.25               0.31                     -0.04                       0.01                           -0.13
+post_induction_valence_change      -0.12               0.01                     -0.08                       0.09                            0.11
+post_task_valence_change            0.06               0.02                      0.06                      -0.21                           -0.23
+                                PM_performance post_induction_valence_change post_task_valence_change
+agegroup                                 -0.25                         -0.12                     0.06
+fluid_intelligence                        0.31                          0.01                     0.02
+crystallized_intelligence                -0.04                         -0.08                     0.06
+general_intrusive_thoughts                0.01                          0.09                    -0.21
+task_related_intrusive_thoughts          -0.13                          0.11                    -0.23
+PM_performance                            1.00                         -0.07                     0.22
+post_induction_valence_change            -0.07                          1.00                    -0.42
+post_task_valence_change                  0.22                         -0.42                     1.00
