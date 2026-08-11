@@ -69,4 +69,4 @@ emmip(mod_valence, agegroup ~ cond | valence_measure, CIs = TRUE) +
   )
 )
 
-ggsave("Write_up/figures/valence_all_contrasts.png", width = 12, height = 6, dpi = 300)
+ggsave("Write_up/figures/valence_all_contrasts.png", width = 14, height = 8, dpi = 300)

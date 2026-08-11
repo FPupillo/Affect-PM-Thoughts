@@ -35,8 +35,8 @@ params<-
     axis.title.x = element_text(size = 28),
     axis.title.y = element_text(size = 28),
     axis.text=element_text(size=26),
-    legend.text=element_text(size=rel(4)),
-    legend.title = element_text(size=rel(4)), 
+    legend.text=element_text(size=rel(2.5)),
+    legend.title = element_text(size=rel(2.5)), 
     strip.text.x = element_text(size=25)
   )
 
@@ -256,7 +256,7 @@ source("R/6.valence_analysis.R")
 ```{r}
 #| message: false
 #| warning: false
-#| include: false
+#| include: true
 source("R/6S.arousal_analysis.R")
 
 ```
@@ -271,122 +271,22 @@ source("helper_functions/logit_transform.R")
 
 source("R/7.PM_main_analysis.R")
 
-# check if the order (repetition) of the task affected PM
-long_df_merged$order<-as.numeric(long_df_merged$order)
 
-# center order
-long_df_merged$order_c<-ifelse(long_df_merged$order==1, -1, 
-                               ifelse(long_df_merged$order==2, 0, 
-                                      1))
-
-long_df_merged$DS.c<-scale(long_df_merged$DS)
-
-long_df_merged$Mill_Hill.c<-scale(long_df_merged$Mill_Hill)
-
-
-reg.s_order<-lmer(PM_task_lenient_av_log~order_c*agegroup.c+DS.c+Mill_Hill.c+aft_PM_minus_after_ind.s*agegroup.c + 
-              valence_aftIND_min_bef.s*agegroup.c+(1+order_c|participant), 
-            data = long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26),])
-summary(reg.s_order)
-
-tab_model(reg.s_order, file = "main_regression_table.html")
-
-
-anova(reg.s_order)
-
-
-vif(reg.s_order)
-
-eta_squared(reg.s_order, partial = T, alternative = "two.sided")
-
-# check the interaction between age and DS
-age_DS<-lmer(PM_task_lenient_av_log~agegroup*DS.c+(1|participant), 
-            data = long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26),])
-
-summary(age_DS)
-
-
-interact_plot(age_DS,
-           
-              pred = DS.c,
-      
-              modx = agegroup,
-       
-              interval = TRUE,
-              legend.main = "Age group"
-              )+
-  labs(x = "Fluid intelligence (centered)", 
-       y = "PM performance")+
-  theme_classic()+
-  labs(colour = "Age group")
-
-# without centering
-reg_order<-lmer(PM_task_lenient_av_log~ +DS+order_c+aft_PM_minus_after_ind*agegroup.c + 
-            valence_aftIND_min_bef*agegroup.c+(1|participant), 
-          data = long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26),])
-
-
-Anova(reg_order, type =2)
-
-
-
-# 1) Predicted curve for post-induction (hold post-task at 0)
-pred_T2T1 <- ggpredict(
-  reg_order,
-  terms = c("valence_aftIND_min_bef", "agegroup.c"),
-  condition = c(aft_PM_minus_after_ind.s = 0)   # set the other predictor to 0 (its natural reference)
-) %>%
-  as_tibble() %>%
-  mutate(measure = "post_induction",
-         x = x)   # keep x for clarity
-
-# 2) Predicted curve for post-task (hold post-induction at 0)
-pred_T3T2 <- ggpredict(
-  reg_order,
-  terms = c("aft_PM_minus_after_ind", "agegroup.c"),
-  condition = c(valence_aftIND_min_bef = 0)
-) %>%
-  as_tibble() %>%
-  mutate(measure = "post_task",
-         x = x)
-
-# 3) Combine and plot
-pred_all <- bind_rows(pred_T2T1, pred_T3T2)
-
-print(
-ggplot(pred_all, aes(x = x, y = predicted, colour = group)) +
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group),
-              alpha = 0.15, colour = NA) +
-  geom_line(size = 1) +
-  facet_wrap(~ measure, nrow = 1, labeller = lab_valence) +
-  labs(x = "Valence", y = "Predicted PM accuracy", colour = "Age group", fill = "Age group") +
-  scale_color_manual(values = c("-0.5" = "#0072B2",  # blue
-                                "0.5" = "#D55E00"),  # vermillion, 
-                     labels = c("-0.5" = "YA", "0.5" = "OA")) +
-  #scale_fill_manual(values = c(YA = "darkorange", OA = "darkgreen")) +  # CI ribbons
-  scale_fill_manual(values = c("-0.5" = "#0072B2",  # blue
-                               "0.5" = "#D55E00"),  # vermillion, 
-                    labels = c("-0.5" = "YA", "0.5" = "OA"))  +  # CI ribbons
-  geom_vline(xintercept = 0)+
-  theme_classic()+
-  theme(legend.position = "none")+
-  params
-
-)
 ```
 
-## Intrusive thoughts
 
+
+## Intrusive thoughts
 ```{r}
 #| message: false
 #| warning: false
 source("R/8.intrusive_thoughts.R")
 ```
 
-## Mediation analyses
+## Associational variable analyses
 ```{r}
 #| warning: false
-source("R/9.mediations.R")
+source("R/9.Associational_variable_analysis.R")
 ```
 
 ## Create a correlation table with all the variables
@@ -427,4 +327,4 @@ sink()
 
 ```
 
-
+[!Associational variable analysis diagram](associational pathway diagram.jpgabn)

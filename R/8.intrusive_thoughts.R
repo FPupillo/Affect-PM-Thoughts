@@ -1,7 +1,9 @@
 #------------------------------------------------------------------------------#
 # Effect of general intrusive thoughts on PM
 #------------------------------------------------------------------------------#
-mod_thouhgts_gen_PM<-lmer(PM_task_lenient_av_log~tcaq_g*agegroup.c+c_tcaq*agegroup.c+
+mod_thouhgts_gen_PM<-lmer(PM_task_lenient_av_log~
+                            DS.c+Mill_Hill.c+order_c+
+                            tcaq_g*agegroup.c+c_tcaq*agegroup.c+
                             (1|participant), 
                           long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26) ,])
 
@@ -9,12 +11,13 @@ tab_model(mod_thouhgts_gen_PM)
 print(
 summary(mod_thouhgts_gen_PM)
 )
-anova(mod_thouhgts_gen_PM, type =3)
+anova(mod_thouhgts_gen_PM)
 
 eta_squared(mod_thouhgts_gen_PM, partial = T, altenative = "two.sided")
 
 # run analysis for yound and older separately
-mod_thoughts_PM_YA<-lmer(PM_task_lenient_av_log~tcaq_g+(1|participant), 
+mod_thoughts_PM_YA<-lmer(PM_task_lenient_av_log~tcaq_g+
+                           DS.c+Mill_Hill.c+order_c+(1|participant), 
                          long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26) &
                                            long_df_merged$agegroup=="YA",])
 
@@ -26,7 +29,8 @@ p_corr_YA
 
 eta_squared(mod_thoughts_PM_YA, partial = T, altenative = "two.sided")
 # now older
-mod_thoughts_PM_OA<-lmer(PM_task_lenient_av_log~tcaq_g+(1|participant), 
+mod_thoughts_PM_OA<-lmer(PM_task_lenient_av_log~tcaq_g+
+                            DS.c+Mill_Hill.c+order_c+(1|participant), 
                          long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26) &
                                            long_df_merged$agegroup=="OA",])
 
@@ -43,9 +47,10 @@ p1<-ggplot(long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26) 
        aes( x=tcaq_g, y=  PM_task_lenient_av, colour = agegroup))+
   ylab("PM Performance")+
   xlab("General intrusive thoughts")+
+
+  scale_fill_manual( values =  okabe_ito)+
   scale_color_manual(
     values = okabe_ito)+
-  scale_fill_manual( values =  okabe_ito)+
   geom_smooth(method="lm",formula=y~x, se=T)+
   params+
   labs( color = "Age group"  )+ 
@@ -65,9 +70,10 @@ p2<-ggplot(long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26) 
   geom_smooth(method="lm",formula=y~x, se=T)+
   ylab("PM Performance")+
   xlab("Intrusive Thoughts During Task")+
-  scale_color_manual(
-    values = okabe_ito)+
+
   scale_fill_manual( values =  okabe_ito)+
+    scale_color_manual(
+    values = okabe_ito)+
   params+
   labs( color = "Age group"  )+ 
   # add the "smooth" line, which the regression method ('l,')
@@ -80,34 +86,14 @@ p2<-ggplot(long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26) 
 
 
 ggpubr::ggarrange(p1, p2, ncol = 2, common.legend = TRUE, legend = "bottom",
-                  #labels = c("a)", "b)"), 
+                  labels = c("a)", "b)"), 
                   font.label = list(size = 24, face = "bold"), 
                   label.x = -0.02, label.y = 0.98)
 
 # combined the two
-ggsave("Write_up/figures/task-related_general_intr_PM.png", width = 10, height = 6, dpi = 300)
+ggsave("Write_up/figures/task-related_general_intr_PM.png", width = 14, height = 8, dpi = 300)
 
 
-# effect of general intrusive thoughts on PM
-print(
-ggplot(long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26) ,], 
-       aes( x=tcaq_g, y=PM_task_lenient_av, colour = agegroup))+
-  geom_smooth(method="lm",formula=y~x, se=T)+
-  ylab("PM Performance")+
-  xlab("General Intrusive Thoughts")+
-  scale_color_manual(
-    values = okabe_ito)+
-  scale_fill_manual( values =  okabe_ito)+
-  params+
-  labs( color = "Age group"  )+ 
-  # add the "smooth" line, which the regression method ('l,')
-  # and trasparent (0.5)
-  
-  # specify that we want different colours for different participants
-  # add the summary line with geom_smooth
-  theme_classic()+
-  params
-)
 
 
 
@@ -133,13 +119,16 @@ ggplot(long_df_merged_all_long[ (is.na(long_df_merged_all_long$MOCA)|long_df_mer
   xlab("Valence")+
   scale_color_manual(
     values = okabe_ito)+
-  scale_fill_manual( values =  okabe_ito)+params
+  scale_fill_manual( values =  okabe_ito)+params+
+  theme(legend.position = "bottom")
+  
 )
 
-ggsave("Write_up/figures/valence_Age_PM.png", width = 8, height = 6, dpi = 300)
+ggsave("Write_up/figures/valence_Age_thoughts.png", width = 14, height = 8, dpi = 300)
 
 
-mod__valence_thougths<-lmer(c_tcaq~valence_aftIND_min_bef.s*agegroup.c+ aft_PM_minus_after_ind.s*agegroup.c+
+mod__valence_thougths<-lmer(c_tcaq~DS.c*agegroup.c+Mill_Hill.c+order_c+
+                              valence_aftIND_min_bef.s*agegroup.c+ aft_PM_minus_after_ind.s*agegroup.c+
                               
                               (1|participant), 
                             data = long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26) ,],
@@ -147,7 +136,7 @@ mod__valence_thougths<-lmer(c_tcaq~valence_aftIND_min_bef.s*agegroup.c+ aft_PM_m
 print(
 summary(mod__valence_thougths)
 )
-anova(mod__valence_thougths, type = 2, ddf = "Kenward-Roger")
+anova(mod__valence_thougths, type = 3, ddf = "Kenward-Roger")
 
 eta_squared(mod__valence_thougths, partial = T, altenative = "two.sided")
 
@@ -224,7 +213,7 @@ summary(mod_thouhgts_task_DS)
 vif(mod_thouhgts_task_DS)
 tab_model(mod_thouhgts_task_DS)
 
-Anova(mod_thouhgts_task_DS, type=3)
+anova(mod_thouhgts_task_DS, type=3)
 
 
 interact_plot(mod_thouhgts_task_DS,
@@ -272,6 +261,7 @@ mod_thouhgts_gen_DS<-lm(tcaq_g~DS*agegroup.c,
                      long_df_part[ (is.na(long_df_part$MOCA)|long_df_part$MOCA>=26) ,])
 
 summary(mod_thouhgts_gen_DS)
+
 
 Anova(mod_thouhgts_gen_DS, type = 3)
 

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -10,6 +10,9 @@
 
 <title>Valence_PM_thoughts</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -67,15 +70,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ff63373b1067ca6f91cf1456aa1f00a2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-ece42c8223ec2bf36298a08f122c9a68.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -124,9 +126,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#sociodemographics" id="toc-sociodemographics" class="nav-link" data-scroll-target="#sociodemographics">Sociodemographics</a></li>
   <li><a href="#sociodemographics-1" id="toc-sociodemographics-1" class="nav-link" data-scroll-target="#sociodemographics-1">Sociodemographics</a></li>
   <li><a href="#valence-analyses" id="toc-valence-analyses" class="nav-link" data-scroll-target="#valence-analyses">Valence analyses</a></li>
+  <li><a href="#additional-arousal-analysis" id="toc-additional-arousal-analysis" class="nav-link" data-scroll-target="#additional-arousal-analysis">additional arousal analysis</a></li>
   <li><a href="#pm-analysis" id="toc-pm-analysis" class="nav-link" data-scroll-target="#pm-analysis">PM analysis</a></li>
   <li><a href="#intrusive-thoughts" id="toc-intrusive-thoughts" class="nav-link" data-scroll-target="#intrusive-thoughts">Intrusive thoughts</a></li>
-  <li><a href="#mediation-analyses" id="toc-mediation-analyses" class="nav-link" data-scroll-target="#mediation-analyses">Mediation analyses</a></li>
+  <li><a href="#associational-variable-analyses" id="toc-associational-variable-analyses" class="nav-link" data-scroll-target="#associational-variable-analyses">Associational variable analyses</a></li>
+  <li><a href="#create-a-correlation-table-with-all-the-variables" id="toc-create-a-correlation-table-with-all-the-variables" class="nav-link" data-scroll-target="#create-a-correlation-table-with-all-the-variables">Create a correlation table with all the variables</a></li>
   </ul>
 </nav>
     </div>
@@ -174,13 +178,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># change some parameters for plotting</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>params<span class="ot">&lt;-</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">25</span>),</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>),</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>),</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">16</span>),</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="fu">rel</span>(<span class="dv">2</span>)),</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="fu">rel</span>(<span class="dv">2</span>)), </span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">15</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">35</span>),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">28</span>),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">28</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">26</span>),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="fu">rel</span>(<span class="fl">2.5</span>)),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="fu">rel</span>(<span class="fl">2.5</span>)), </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">25</span>)</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># use colour-blind friendly palette</span></span>
@@ -208,21 +212,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># import the spss dataset</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>df_wide<span class="ot">&lt;-</span><span class="fu">read.csv</span>(<span class="st">"group_data/df_wide.csv"</span>)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># get the spss file</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>spss_data<span class="ot">&lt;-</span><span class="fu">read.csv</span>(<span class="st">"PM final data.csv"</span>  )</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------------------------------#</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------------------------------#</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># create age variable</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>df_wide<span class="sc">$</span>agegroup<span class="ot">&lt;-</span><span class="fu">ifelse</span>(df_wide<span class="sc">$</span>agegroup<span class="sc">==</span><span class="dv">1</span>, <span class="st">"YA"</span>, <span class="st">"OA"</span>)</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#df_long$agegroup&lt;-ifelse(df_long$agegroup==1, "YA", "OA")</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>spss_data<span class="sc">$</span>AgeGroup<span class="ot">&lt;-</span><span class="fu">ifelse</span>(spss_data<span class="sc">$</span>AgeGroup<span class="sc">==</span><span class="dv">1</span>, <span class="st">"YA"</span>, <span class="st">"OA"</span>)</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>single_part<span class="ot">&lt;-</span> df_wide <span class="sc">%&gt;%</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(participant) <span class="sc">%&gt;%</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span>)</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Total number of participants is"</span>, <span class="fu">nrow</span>(single_part)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># now we need to add the order of the conditions, i.e. which condition is presented</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># first, which one second, and which one third</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># there are six conditions, repeated within participants.</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># they can be found in the files "Age, Mood and PM Project Participant Code.xlsx</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># They are the following</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>conditions <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Positive"</span>, <span class="st">"Negative"</span>, <span class="st">"Neutral"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Positive"</span>, <span class="st">"Neutral"</span>,  <span class="st">"Negative"</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Negative"</span>, <span class="st">"Positive"</span>, <span class="st">"Neutral"</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Negative"</span>, <span class="st">"Neutral"</span>,  <span class="st">"Positive"</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Neutral"</span>,  <span class="st">"Negative"</span>, <span class="st">"Positive"</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Neutral"</span>,  <span class="st">"Positive"</span>, <span class="st">"Negative"</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> <span class="dv">6</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co"># I need to repeat it 11 times to get all participants</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>cond_all<span class="ot">&lt;-</span>conditions[<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(conditions), <span class="dv">11</span>), ]</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co"># get the order variable</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>df_wide<span class="sc">$</span>order<span class="ot">&lt;-</span><span class="cn">NA</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (n <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(df_wide)){ <span class="co"># loop through the observations (conditions)</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (df_wide<span class="sc">$</span>participant[n]<span class="sc">&lt;</span><span class="dv">100</span>){ <span class="co"># if participant number was not modified</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    c_order<span class="ot">&lt;-</span> cond_all[df_wide<span class="sc">$</span>participant[n],]</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># in which position is that condition for that participant?</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    c_num<span class="ot">&lt;-</span><span class="fu">which</span>(c_order <span class="sc">==</span> df_wide<span class="sc">$</span>cond[n])</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> { <span class="co"># if we added 100 to the participants (older adults) to distinguish</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># them from the YA</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    c_order<span class="ot">&lt;-</span> cond_all[df_wide<span class="sc">$</span>participant[n]<span class="sc">-</span><span class="dv">100</span>,]</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    c_num<span class="ot">&lt;-</span><span class="fu">which</span>(c_order <span class="sc">==</span> df_wide<span class="sc">$</span>cond[n])</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>  df_wide<span class="sc">$</span>order[n]<span class="ot">&lt;-</span>c_num</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="co"># get the spss file</span></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>spss_data<span class="ot">&lt;-</span><span class="fu">read.csv</span>(<span class="st">"PM final data.csv"</span>  )</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------------------------------#</span></span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------------------------------#</span></span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a><span class="co"># create age variable</span></span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>df_wide<span class="sc">$</span>agegroup<span class="ot">&lt;-</span><span class="fu">ifelse</span>(df_wide<span class="sc">$</span>agegroup<span class="sc">==</span><span class="dv">1</span>, <span class="st">"YA"</span>, <span class="st">"OA"</span>)</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a><span class="co">#df_long$agegroup&lt;-ifelse(df_long$agegroup==1, "YA", "OA")</span></span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>spss_data<span class="sc">$</span>AgeGroup<span class="ot">&lt;-</span><span class="fu">ifelse</span>(spss_data<span class="sc">$</span>AgeGroup<span class="sc">==</span><span class="dv">1</span>, <span class="st">"YA"</span>, <span class="st">"OA"</span>)</span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>single_part<span class="ot">&lt;-</span> df_wide <span class="sc">%&gt;%</span></span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(participant) <span class="sc">%&gt;%</span></span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span>)</span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Total number of participants is"</span>, <span class="fu">nrow</span>(single_part)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Total number of participants is 125"</code></pre>
@@ -250,13 +305,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(age_plot)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
-(`stat_bin()`).</code></pre>
-</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -266,12 +314,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check the number of participants</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(df_wide <span class="sc">%&gt;%</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(participant) <span class="sc">%&gt;%</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">slice</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>( agegroup)<span class="sc">%&gt;%</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tally</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check the number of participants</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(df_wide <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(participant) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">slice</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>( agegroup)<span class="sc">%&gt;%</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tally</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
@@ -295,7 +343,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#--------------------</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#--------------------</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -305,7 +353,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/2.sociodemographics.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/2.sociodemographics.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -319,7 +367,7 @@ Table: Sociodemographics
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(gender_part, <span class="at">caption =</span> <span class="st">"Gender by Agegroup"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(gender_part, <span class="at">caption =</span> <span class="st">"Gender by Agegroup"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
@@ -362,7 +410,7 @@ Table: Sociodemographics
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(part_demo, <span class="at">caption =</span> <span class="st">"Sociodemographics"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(part_demo, <span class="at">caption =</span> <span class="st">"Sociodemographics"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
@@ -457,9 +505,9 @@ Table: Sociodemographics
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/3.compare_sociodemo.R"</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_health)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/3.compare_sociodemo.R"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_health)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -484,7 +532,7 @@ F-statistic: 1.114 on 1 and 115 DF,  p-value: 0.2935</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_educat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_educat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -509,7 +557,7 @@ F-statistic: 4.635 on 1 and 111 DF,  p-value: 0.0335</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mill_hill)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mill_hill)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -534,7 +582,7 @@ F-statistic:   161 on 1 and 116 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(digit_symbol)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(digit_symbol)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -559,10 +607,10 @@ F-statistic: 15.97 on 1 and 116 DF,  p-value: 0.0001132</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a contingency table to check whther the distribution of gender is equal</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>contingency_table_gender<span class="ot">&lt;-</span><span class="fu">table</span>(single_part[, <span class="fu">c</span>(<span class="st">"agegroup"</span>, <span class="st">"gender"</span>)])</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>chi_square_test <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(contingency_table_gender)</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>chi_square_test</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a contingency table to check whther the distribution of gender is equal</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>contingency_table_gender<span class="ot">&lt;-</span><span class="fu">table</span>(single_part[, <span class="fu">c</span>(<span class="st">"agegroup"</span>, <span class="st">"gender"</span>)])</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>chi_square_test <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(contingency_table_gender)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>chi_square_test</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -576,16 +624,16 @@ X-squared = 3.1684, df = 1, p-value = 0.07508</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now call  the script to the reshape the valence</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/4.valence_reshape.R"</span>)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># participant check</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># check the number of participants</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(long_df_valence <span class="sc">%&gt;%</span></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(participant) <span class="sc">%&gt;%</span></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">slice</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>( agegroup)<span class="sc">%&gt;%</span></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tally</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now call  the script to the reshape the valence</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/4.valence_reshape.R"</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># participant check</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># check the number of participants</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(long_df_valence <span class="sc">%&gt;%</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(participant) <span class="sc">%&gt;%</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">slice</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>( agegroup)<span class="sc">%&gt;%</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tally</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
@@ -609,11 +657,11 @@ X-squared = 3.1684, df = 1, p-value = 0.07508</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(long_df_valence_diff <span class="sc">%&gt;%</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(participant) <span class="sc">%&gt;%</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">slice</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>( agegroup)<span class="sc">%&gt;%</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tally</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(long_df_valence_diff <span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(participant) <span class="sc">%&gt;%</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">slice</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>( agegroup)<span class="sc">%&gt;%</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tally</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
@@ -640,12 +688,8 @@ X-squared = 3.1684, df = 1, p-value = 0.07508</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/5.valence_preproc.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/5.valence_preproc.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Using the `size` aesthetic with geom_polygon was deprecated in ggplot2 3.4.0.
-ℹ Please use the `linewidth` aesthetic instead.</code></pre>
-</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -674,20 +718,6 @@ X-squared = 3.1684, df = 1, p-value = 0.07508</code></pre>
 </figure>
 </div>
 </div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'tidyr'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:reshape2':
-
-    smiths</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following objects are masked from 'package:Matrix':
-
-    expand, pack, unpack</code></pre>
-</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -702,19 +732,24 @@ Attaching package: 'tidyr'</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/6.valence_analysis.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/6.valence_analysis.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>boundary (singular) fit: see help('isSingular')</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>NOTE: Results may be misleading due to involvement in interactions</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: No shared levels found between `names(values)` of the manual scale and the
-data's fill values.
-No shared levels found between `names(values)` of the manual scale and the
-data's fill values.</code></pre>
+<div class="cell-output cell-output-stdout">
+<pre><code>valence_measure = post_induction:
+ cond     emmean     SE  df lower.CL upper.CL
+ Negative -0.745 0.0804 702   -0.902  -0.5868
+ Neutral   0.277 0.0804 702    0.119   0.4352
+ Positive  0.460 0.0804 702    0.303   0.6182
+
+valence_measure = post_task:
+ cond     emmean     SE  df lower.CL upper.CL
+ Negative  0.555 0.0804 702    0.398   0.7133
+ Neutral  -0.213 0.0804 702   -0.371  -0.0548
+ Positive -0.339 0.0804 702   -0.497  -0.1809
+
+Results are averaged over the levels of: agegroup 
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 </code></pre>
 </div>
 <div class="cell-output-display">
 <div>
@@ -725,90 +760,13 @@ data's fill values.</code></pre>
 </div>
 </div>
 </section>
-<section id="pm-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="pm-analysis">PM analysis</h2>
+<section id="additional-arousal-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="additional-arousal-analysis">additional arousal analysis</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"helper_functions/logit_transform.R"</span>)</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/7.PM_main_analysis.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/6S.arousal_analysis.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Type III Analysis of Variance Table with Satterthwaite's method
-                                    Sum Sq Mean Sq NumDF  DenDF F value
-aft_PM_minus_after_ind.s            7.1675  7.1675     1 337.22  9.4036
-agegroup.c                          5.0883  5.0883     1 112.46  6.6758
-valence_aftIND_min_bef.s            5.8929  5.8929     1 314.49  7.7314
-aft_PM_minus_after_ind.s:agegroup.c 0.2542  0.2542     1 337.22  0.3336
-agegroup.c:valence_aftIND_min_bef.s 0.0187  0.0187     1 314.49  0.0245
-                                      Pr(&gt;F)   
-aft_PM_minus_after_ind.s            0.002341 **
-agegroup.c                          0.011055 * 
-valence_aftIND_min_bef.s            0.005754 **
-aft_PM_minus_after_ind.s:agegroup.c 0.563957   
-agegroup.c:valence_aftIND_min_bef.s 0.875773   
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-# Effect Size for ANOVA (Type III)
-
-Parameter                           | Eta2 (partial) |       95% CI
--------------------------------------------------------------------
-aft_PM_minus_after_ind.s            |           0.03 | [0.00, 0.07]
-agegroup.c                          |           0.06 | [0.00, 0.16]
-valence_aftIND_min_bef.s            |           0.02 | [0.00, 0.07]
-aft_PM_minus_after_ind.s:agegroup.c |       9.88e-04 | [0.00, 0.02]
-agegroup.c:valence_aftIND_min_bef.s |       7.78e-05 | [0.00, 0.01]
-Linear mixed model fit by REML. t-tests use Satterthwaite's method [
-lmerModLmerTest]
-Formula: PM_task_lenient_av_log ~ aft_PM_minus_after_ind.s * agegroup.c +  
-    valence_aftIND_min_bef.s * agegroup.c + (1 | participant)
-   Data: long_df_merged[(is.na(long_df_merged$MOCA) | long_df_merged$MOCA &gt;=  
-    26), ]
-
-REML criterion at convergence: 1001.5
-
-Scaled residuals: 
-    Min      1Q  Median      3Q     Max 
--2.5841 -0.4528  0.1433  0.6463  1.8714 
-
-Random effects:
- Groups      Name        Variance Std.Dev.
- participant (Intercept) 0.3284   0.5731  
- Residual                0.7622   0.8730  
-Number of obs: 348, groups:  participant, 117
-
-Fixed effects:
-                                     Estimate Std. Error        df t value
-(Intercept)                           0.53032    0.07093 112.46241   7.477
-aft_PM_minus_after_ind.s              0.21641    0.07057 337.21911   3.067
-agegroup.c                           -0.36653    0.14186 112.46241  -2.584
-valence_aftIND_min_bef.s              0.18991    0.06830 314.49377   2.781
-aft_PM_minus_after_ind.s:agegroup.c  -0.08152    0.14114 337.21911  -0.578
-agegroup.c:valence_aftIND_min_bef.s   0.02137    0.13660 314.49377   0.156
-                                    Pr(&gt;|t|)    
-(Intercept)                         1.79e-11 ***
-aft_PM_minus_after_ind.s             0.00234 ** 
-agegroup.c                           0.01105 *  
-valence_aftIND_min_bef.s             0.00575 ** 
-aft_PM_minus_after_ind.s:agegroup.c  0.56396    
-agegroup.c:valence_aftIND_min_bef.s  0.87577    
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Correlation of Fixed Effects:
-            (Intr) af_PM___. aggrp. v_IND_ a_PM___.:
-aft_PM_m__.  0.002                                  
-agegroup.c   0.065 -0.001                           
-vlnc_IND__. -0.005  0.651     0.016                 
-af_PM___.:. -0.001 -0.231     0.002 -0.037          
-ag.:_IND__.  0.016 -0.037    -0.005  0.179  0.651   </code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-ℹ Please use `linewidth` instead.</code></pre>
-</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -816,47 +774,166 @@ ag.:_IND__.  0.016 -0.037    -0.005  0.179  0.651   </code></pre>
 </figure>
 </div>
 </div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Analyses_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Analyses_files/figure-html/unnamed-chunk-10-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Analyses_files/figure-html/unnamed-chunk-10-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Analyses_files/figure-html/unnamed-chunk-10-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Analyses_files/figure-html/unnamed-chunk-10-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Analyses_files/figure-html/unnamed-chunk-10-7.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>arousal_measure = post_induction, cond = Negative:
+ agegroup  emmean    SE  df lower.CL upper.CL
+ YA       -0.3004 0.125 698  -0.5462  -0.0547
+ OA        0.1349 0.132 698  -0.1237   0.3935
+
+arousal_measure = post_task, cond = Negative:
+ agegroup  emmean    SE  df lower.CL upper.CL
+ YA        0.3730 0.125 698   0.1273   0.6188
+ OA       -0.2386 0.132 698  -0.4972   0.0200
+
+arousal_measure = post_induction, cond = Neutral:
+ agegroup  emmean    SE  df lower.CL upper.CL
+ YA        0.3327 0.125 698   0.0869   0.5784
+ OA        0.0262 0.132 698  -0.2324   0.2848
+
+arousal_measure = post_task, cond = Neutral:
+ agegroup  emmean    SE  df lower.CL upper.CL
+ YA       -0.0968 0.125 698  -0.3425   0.1490
+ OA        0.0704 0.132 698  -0.1882   0.3290
+
+arousal_measure = post_induction, cond = Positive:
+ agegroup  emmean    SE  df lower.CL upper.CL
+ YA        0.0364 0.125 698  -0.2093   0.2822
+ OA       -0.2330 0.131 698  -0.4893   0.0234
+
+arousal_measure = post_task, cond = Positive:
+ agegroup  emmean    SE  df lower.CL upper.CL
+ YA       -0.0968 0.125 698  -0.3425   0.1490
+ OA       -0.0300 0.131 698  -0.2863   0.2263
+
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Analyses_files/figure-html/unnamed-chunk-10-8.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="pm-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="pm-analysis">PM analysis</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"helper_functions/logit_transform.R"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/7.PM_main_analysis.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Analyses_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
 lmerModLmerTest]
-Formula: 
-PM_task_lenient_av_log ~ post_ind_pos_spline.s + post_ind_neg_spline.s +  
-    +agegroup.c + post_PM_pos_spline.s + post_PM_neg_spline.s +  
-    (1 | participant)
+Formula: PM_task_lenient_av_log ~ agegroup.c * order_c + DS.c + Mill_Hill.c +  
+    post_ind_pos_spline.s + post_ind_neg_spline.s + +agegroup.c +  
+    post_PM_pos_spline.s + post_PM_neg_spline.s + (1 | participant)
    Data: long_df_merged[(is.na(long_df_merged$MOCA) | long_df_merged$MOCA &gt;=  
     26), ]
 Control: lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+05))
 
-REML criterion at convergence: 1003.2
+REML criterion at convergence: 976
 
 Scaled residuals: 
     Min      1Q  Median      3Q     Max 
--2.6423 -0.4712  0.1427  0.6297  1.9224 
+-2.4963 -0.5062  0.1374  0.6375  1.9638 
 
 Random effects:
  Groups      Name        Variance Std.Dev.
- participant (Intercept) 0.3350   0.5788  
- Residual                0.7564   0.8697  
-Number of obs: 348, groups:  participant, 117
+ participant (Intercept) 0.2937   0.5420  
+ Residual                0.7068   0.8407  
+Number of obs: 345, groups:  participant, 115
 
 Fixed effects:
                        Estimate Std. Error        df t value Pr(&gt;|t|)    
-(Intercept)             0.52820    0.07120 111.70337   7.419 2.47e-11 ***
-post_ind_pos_spline.s   0.01537    0.06333 311.03673   0.243  0.80841    
-post_ind_neg_spline.s   0.20575    0.07530 302.14412   2.732  0.00666 ** 
-agegroup.c             -0.39247    0.14406 115.85951  -2.724  0.00744 ** 
-post_PM_pos_spline.s    0.16251    0.07491 305.80703   2.169  0.03083 *  
-post_PM_neg_spline.s    0.10883    0.06374 338.94968   1.708  0.08863 .  
+(Intercept)             0.53482    0.06836 109.03763   7.824 3.53e-12 ***
+agegroup.c             -0.53698    0.22467 113.00351  -2.390  0.01850 *  
+order_c                 0.23030    0.05686 231.57993   4.051 6.98e-05 ***
+DS.c                    0.19333    0.07215 109.17751   2.679  0.00852 ** 
+Mill_Hill.c             0.20035    0.10724 109.98884   1.868  0.06440 .  
+post_ind_pos_spline.s   0.02270    0.06132 307.28592   0.370  0.71153    
+post_ind_neg_spline.s   0.18843    0.07296 300.34124   2.583  0.01028 *  
+post_PM_pos_spline.s    0.16727    0.07227 303.46120   2.315  0.02131 *  
+post_PM_neg_spline.s    0.06437    0.06220 334.26756   1.035  0.30144    
+agegroup.c:order_c      0.18018    0.11189 225.35776   1.610  0.10872    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Correlation of Fixed Effects:
-            (Intr) pst_nd_p_. pst_nd_n_. aggrp. pst_PM_p_.
-pst_nd_ps_.  0.007                                        
-pst_nd_ng_. -0.015 -0.279                                 
-agegroup.c   0.067  0.140     -0.095                      
-pst_PM_ps_.  0.001 -0.067      0.667     -0.052           
-pst_PM_ng_. -0.001  0.435     -0.025      0.045 -0.173    </code></pre>
+            (Intr) aggrp. ordr_c DS.c   Mll_H. pst_nd_p_. pst_nd_n_. pst_PM_p_.
+agegroup.c   0.120                                                             
+order_c      0.001  0.012                                                      
+DS.c         0.006  0.240  0.005                                               
+Mill_Hill.c -0.094 -0.760 -0.005 -0.031                                        
+pst_nd_ps_.  0.010  0.140  0.050  0.027 -0.066                                 
+pst_nd_ng_. -0.015 -0.091 -0.076 -0.007  0.043 -0.285                          
+pst_PM_ps_. -0.002 -0.037  0.030 -0.001  0.005 -0.066      0.662               
+pst_PM_ng_.  0.005  0.050 -0.155 -0.009 -0.031  0.420     -0.012     -0.173    
+aggrp.c:rd_  0.000  0.007  0.096  0.003 -0.002  0.037     -0.050     -0.029    
+            pst_PM_n_.
+agegroup.c            
+order_c               
+DS.c                  
+Mill_Hill.c           
+pst_nd_ps_.           
+pst_nd_ng_.           
+pst_PM_ps_.           
+pst_PM_ng_.           
+aggrp.c:rd_ -0.070    </code></pre>
 </div>
 </div>
 </section>
@@ -865,104 +942,57 @@ pst_PM_ng_. -0.001  0.435     -0.025      0.045 -0.173    </code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/8.intrusive_thoughts.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/8.intrusive_thoughts.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
 lmerModLmerTest]
-Formula: PM_task_lenient_av_log ~ tcaq_g * agegroup.c + c_tcaq * agegroup.c +  
-    (1 | participant)
+Formula: PM_task_lenient_av_log ~ DS.c + Mill_Hill.c + order_c + tcaq_g *  
+    agegroup.c + c_tcaq * agegroup.c + (1 | participant)
    Data: long_df_merged[(is.na(long_df_merged$MOCA) | long_df_merged$MOCA &gt;=  
     26), ]
 
-REML criterion at convergence: 970.1
+REML criterion at convergence: 953.9
 
 Scaled residuals: 
     Min      1Q  Median      3Q     Max 
--2.8671 -0.4800  0.1698  0.6541  1.7749 
+-2.6188 -0.5031  0.1016  0.6389  1.8578 
 
 Random effects:
  Groups      Name        Variance Std.Dev.
- participant (Intercept) 0.2834   0.5323  
- Residual                0.7576   0.8704  
+ participant (Intercept) 0.2845   0.5334  
+ Residual                0.6949   0.8336  
 Number of obs: 334, groups:  participant, 113
 
 Fixed effects:
                     Estimate Std. Error         df t value Pr(&gt;|t|)    
-(Intercept)         1.973357   0.461653 110.757902   4.275 4.07e-05 ***
-tcaq_g             -0.007242   0.006457 114.932727  -1.122   0.2644    
-agegroup.c          1.467932   0.923305 110.757902   1.590   0.1147    
-c_tcaq             -0.022339   0.005322 301.172603  -4.197 3.56e-05 ***
-tcaq_g:agegroup.c  -0.026943   0.012914 114.932727  -2.086   0.0392 *  
-agegroup.c:c_tcaq  -0.003373   0.010645 301.172604  -0.317   0.7515    
+(Intercept)        1.959e+00  4.534e-01  1.094e+02   4.319 3.46e-05 ***
+DS.c               1.552e-01  7.325e-02  1.103e+02   2.118 0.036393 *  
+Mill_Hill.c        1.405e-01  1.086e-01  1.058e+02   1.293 0.198669    
+order_c            2.556e-01  5.630e-02  2.219e+02   4.541 9.20e-06 ***
+tcaq_g            -8.732e-03  6.377e-03  1.154e+02  -1.369 0.173615    
+agegroup.c         1.198e+00  9.571e-01  1.104e+02   1.251 0.213415    
+c_tcaq            -1.957e-02  5.259e-03  3.092e+02  -3.722 0.000235 ***
+tcaq_g:agegroup.c -2.630e-02  1.274e-02  1.138e+02  -2.064 0.041298 *  
+agegroup.c:c_tcaq -8.065e-04  1.047e-02  3.034e+02  -0.077 0.938669    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Correlation of Fixed Effects:
-            (Intr) tcaq_g aggrp. c_tcaq tcq_:.
-tcaq_g      -0.857                            
-agegroup.c   0.128 -0.173                     
-c_tcaq      -0.226 -0.276 -0.104              
-tcq_g:ggrp. -0.173  0.247 -0.857  0.019       
-aggrp.c:c_t -0.104  0.019 -0.226  0.217 -0.276</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 9 rows containing non-finite outside the scale range
-(`stat_smooth()`).</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: No shared levels found between `names(values)` of the manual scale and the
-data's fill values.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 9 rows containing non-finite outside the scale range
-(`stat_smooth()`).</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: No shared levels found between `names(values)` of the manual scale and the
-data's fill values.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 8 rows containing non-finite outside the scale range
-(`stat_smooth()`).</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: No shared levels found between `names(values)` of the manual scale and the
-data's fill values.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 9 rows containing non-finite outside the scale range
-(`stat_smooth()`).</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: No shared levels found between `names(values)` of the manual scale and the
-data's fill values.</code></pre>
+            (Intr) DS.c   Mll_H. ordr_c tcaq_g aggrp. c_tcaq tcq_:.
+DS.c        -0.031                                                 
+Mill_Hill.c  0.047 -0.014                                          
+order_c     -0.007 -0.010  0.001                                   
+tcaq_g      -0.856 -0.048 -0.112  0.004                            
+agegroup.c   0.103  0.107 -0.306 -0.027 -0.133                     
+c_tcaq      -0.217  0.143  0.135  0.012 -0.287 -0.122              
+tcq_g:ggrp. -0.167  0.016  0.108 -0.031  0.232 -0.839  0.034       
+aggrp.c:c_t -0.096 -0.129  0.037  0.116  0.020 -0.236  0.199 -0.268</code></pre>
 </div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Analyses_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 16 rows containing non-finite outside the scale range
-(`stat_smooth()`).
-No shared levels found between `names(values)` of the manual scale and the
-data's fill values.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 16 rows containing non-finite outside the scale range
-(`stat_smooth()`).</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: No shared levels found between `names(values)` of the manual scale and the
-data's fill values.</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Analyses_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Analyses_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -970,114 +1000,180 @@ data's fill values.</code></pre>
 <pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
 lmerModLmerTest]
 Formula: 
-c_tcaq ~ valence_aftIND_min_bef.s * agegroup.c + aft_PM_minus_after_ind.s *  
-    agegroup.c + (1 | participant)
+c_tcaq ~ DS.c * agegroup.c + Mill_Hill.c + order_c + valence_aftIND_min_bef.s *  
+    agegroup.c + aft_PM_minus_after_ind.s * agegroup.c + (1 |      participant)
    Data: long_df_merged[(is.na(long_df_merged$MOCA) | long_df_merged$MOCA &gt;=  
     26), ]
 Control: lmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+05))
 
-REML criterion at convergence: 2543.4
+REML criterion at convergence: 2522.5
 
 Scaled residuals: 
     Min      1Q  Median      3Q     Max 
--3.1344 -0.5457 -0.0819  0.5291  3.9143 
+-3.2204 -0.5188 -0.0728  0.5426  3.8954 
 
 Random effects:
  Groups      Name        Variance Std.Dev.
- participant (Intercept) 80.01    8.945   
- Residual                64.90    8.056   
+ participant (Intercept) 71.58    8.461   
+ Residual                65.11    8.069   
 Number of obs: 340, groups:  participant, 115
 
 Fixed effects:
                                     Estimate Std. Error       df t value
-(Intercept)                          45.5229     0.9448 112.5636  48.181
-valence_aftIND_min_bef.s             -2.8998     0.6712 272.3221  -4.320
-agegroup.c                          -10.7436     1.8897 112.5636  -5.685
-aft_PM_minus_after_ind.s             -2.0146     0.7135 296.4927  -2.824
-valence_aftIND_min_bef.s:agegroup.c   0.6916     1.3425 272.3221   0.515
-agegroup.c:aft_PM_minus_after_ind.s   1.2245     1.4269 296.4927   0.858
+(Intercept)                          46.2469     0.9661 109.7828  47.867
+DS.c                                 -2.2614     0.9796 109.2464  -2.308
+agegroup.c                           -9.6411     2.9559 109.5888  -3.262
+Mill_Hill.c                          -1.6681     1.4219 109.2268  -1.173
+order_c                               0.2752     0.5419 222.3402   0.508
+valence_aftIND_min_bef.s             -2.9332     0.6713 275.2709  -4.369
+aft_PM_minus_after_ind.s             -2.0590     0.7139 299.7655  -2.884
+DS.c:agegroup.c                       3.7617     1.9597 109.2513   1.920
+agegroup.c:valence_aftIND_min_bef.s   0.6351     1.3382 274.7199   0.475
+agegroup.c:aft_PM_minus_after_ind.s   1.1856     1.4193 299.1431   0.835
                                     Pr(&gt;|t|)    
 (Intercept)                          &lt; 2e-16 ***
-valence_aftIND_min_bef.s            2.19e-05 ***
-agegroup.c                          1.04e-07 ***
-aft_PM_minus_after_ind.s             0.00507 ** 
-valence_aftIND_min_bef.s:agegroup.c  0.60687    
-agegroup.c:aft_PM_minus_after_ind.s  0.39151    
+DS.c                                 0.02286 *  
+agegroup.c                           0.00148 ** 
+Mill_Hill.c                          0.24328    
+order_c                              0.61203    
+valence_aftIND_min_bef.s            1.77e-05 ***
+aft_PM_minus_after_ind.s             0.00421 ** 
+DS.c:agegroup.c                      0.05752 .  
+agegroup.c:valence_aftIND_min_bef.s  0.63547    
+agegroup.c:aft_PM_minus_after_ind.s  0.40418    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Correlation of Fixed Effects:
-            (Intr) vl_IND__. aggrp. a_PM__ v_IND__.:
-vlnc_IND__.  0.004                                  
-agegroup.c   0.074  0.009                           
-aft_PM_m__.  0.007  0.672    -0.003                 
-vl_IND__.:.  0.009  0.163     0.004 -0.069          
-ag.:_PM___. -0.003 -0.069     0.007 -0.296  0.672   
+            (Intr) DS.c   aggrp. Mll_H. ordr_c v_IND_ a_PM__ DS.c:. a.:_IN
+DS.c         0.073                                                        
+agegroup.c   0.116  0.240                                                 
+Mill_Hill.c -0.076 -0.023 -0.758                                          
+order_c     -0.004  0.006  0.002  0.001                                   
+vlnc_IND__.  0.008  0.008  0.009 -0.002 -0.085                            
+aft_PM_m__.  0.009 -0.008  0.002 -0.009 -0.115  0.673                     
+DS.c:ggrp.c  0.338  0.205  0.023  0.030 -0.004  0.011  0.002              
+ag.:_IND__.  0.012  0.011  0.007 -0.003 -0.022  0.164 -0.064  0.009       
+ag.:_PM___. -0.005  0.002  0.015 -0.014 -0.035 -0.064 -0.285 -0.008  0.670
 Linear mixed model fit by REML. t-tests use Satterthwaite's method [
 lmerModLmerTest]
-Formula: PM_task_lenient_av_log ~ tcaq_g * agegroup.c + c_tcaq * agegroup.c +  
-    (1 | participant)
+Formula: PM_task_lenient_av_log ~ DS.c + Mill_Hill.c + order_c + tcaq_g *  
+    agegroup.c + c_tcaq * agegroup.c + (1 | participant)
    Data: long_df_merged[(is.na(long_df_merged$MOCA) | long_df_merged$MOCA &gt;=  
     26), ]
 
-REML criterion at convergence: 970.1
+REML criterion at convergence: 953.9
 
 Scaled residuals: 
     Min      1Q  Median      3Q     Max 
--2.8671 -0.4800  0.1698  0.6541  1.7749 
+-2.6188 -0.5031  0.1016  0.6389  1.8578 
 
 Random effects:
  Groups      Name        Variance Std.Dev.
- participant (Intercept) 0.2834   0.5323  
- Residual                0.7576   0.8704  
+ participant (Intercept) 0.2845   0.5334  
+ Residual                0.6949   0.8336  
 Number of obs: 334, groups:  participant, 113
 
 Fixed effects:
                     Estimate Std. Error         df t value Pr(&gt;|t|)    
-(Intercept)         1.973357   0.461653 110.757902   4.275 4.07e-05 ***
-tcaq_g             -0.007242   0.006457 114.932727  -1.122   0.2644    
-agegroup.c          1.467932   0.923305 110.757902   1.590   0.1147    
-c_tcaq             -0.022339   0.005322 301.172603  -4.197 3.56e-05 ***
-tcaq_g:agegroup.c  -0.026943   0.012914 114.932727  -2.086   0.0392 *  
-agegroup.c:c_tcaq  -0.003373   0.010645 301.172604  -0.317   0.7515    
+(Intercept)        1.959e+00  4.534e-01  1.094e+02   4.319 3.46e-05 ***
+DS.c               1.552e-01  7.325e-02  1.103e+02   2.118 0.036393 *  
+Mill_Hill.c        1.405e-01  1.086e-01  1.058e+02   1.293 0.198669    
+order_c            2.556e-01  5.630e-02  2.219e+02   4.541 9.20e-06 ***
+tcaq_g            -8.732e-03  6.377e-03  1.154e+02  -1.369 0.173615    
+agegroup.c         1.198e+00  9.571e-01  1.104e+02   1.251 0.213415    
+c_tcaq            -1.957e-02  5.259e-03  3.092e+02  -3.722 0.000235 ***
+tcaq_g:agegroup.c -2.630e-02  1.274e-02  1.138e+02  -2.064 0.041298 *  
+agegroup.c:c_tcaq -8.065e-04  1.047e-02  3.034e+02  -0.077 0.938669    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Correlation of Fixed Effects:
-            (Intr) tcaq_g aggrp. c_tcaq tcq_:.
-tcaq_g      -0.857                            
-agegroup.c   0.128 -0.173                     
-c_tcaq      -0.226 -0.276 -0.104              
-tcq_g:ggrp. -0.173  0.247 -0.857  0.019       
-aggrp.c:c_t -0.104  0.019 -0.226  0.217 -0.276</code></pre>
+            (Intr) DS.c   Mll_H. ordr_c tcaq_g aggrp. c_tcaq tcq_:.
+DS.c        -0.031                                                 
+Mill_Hill.c  0.047 -0.014                                          
+order_c     -0.007 -0.010  0.001                                   
+tcaq_g      -0.856 -0.048 -0.112  0.004                            
+agegroup.c   0.103  0.107 -0.306 -0.027 -0.133                     
+c_tcaq      -0.217  0.143  0.135  0.012 -0.287 -0.122              
+tcq_g:ggrp. -0.167  0.016  0.108 -0.031  0.232 -0.839  0.034       
+aggrp.c:c_t -0.096 -0.129  0.037  0.116  0.020 -0.236  0.199 -0.268</code></pre>
 </div>
 </div>
 </section>
-<section id="mediation-analyses" class="level2">
-<h2 class="anchored" data-anchor-id="mediation-analyses">Mediation analyses</h2>
+<section id="associational-variable-analyses" class="level2">
+<h2 class="anchored" data-anchor-id="associational-variable-analyses">Associational variable analyses</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/9.mediations.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/9.Associational_variable_analysis.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>lavaan 0.6-19 ended normally after 23 iterations
+<pre><code>lavaan 0.6-21 ended normally after 93 iterations
 
   Estimator                                         ML
   Optimization method                           NLMINB
-  Number of model parameters                         9
+  Number of model parameters                        23
 
-  Number of observations                           348
-  Number of clusters [participant]                 117
-  Number of missing patterns -- level 1              2
+                                                  Used       Total
+  Number of observations                           345         348
+  Number of clusters [participant]                 115            
+  Number of missing patterns -- level 1              2            
 
 Model Test User Model:
                                               Standard      Scaled
-  Test Statistic                                 0.000       0.000
+  Test Statistic                                 1.662       1.458
   Degrees of freedom                                 1           1
-  P-value (Chi-square)                           1.000       1.000
-  Scaling correction factor                                  2.653
+  P-value (Chi-square)                           0.197       0.227
+  Scaling correction factor                                  1.140
     Yuan-Bentler correction (Mplus variant)                       
+
+Model Test Baseline Model:
+
+  Test statistic                               127.913     121.958
+  Degrees of freedom                                18          18
+  P-value                                        0.000       0.000
+  Scaling correction factor                                  1.049
+
+User Model versus Baseline Model:
+
+  Comparative Fit Index (CFI)                    0.994       0.996
+  Tucker-Lewis Index (TLI)                       0.892       0.921
+                                                                  
+  Robust Comparative Fit Index (CFI)                            NA
+  Robust Tucker-Lewis Index (TLI)                               NA
+
+Loglikelihood and Information Criteria:
+
+  Loglikelihood user model (H0)              -1739.077   -1739.077
+  Scaling correction factor                                  1.124
+      for the MLR correction                                      
+  Loglikelihood unrestricted model (H1)      -1738.245   -1738.245
+  Scaling correction factor                                  1.124
+      for the MLR correction                                      
+                                                                  
+  Akaike (AIC)                                3524.153    3524.153
+  Bayesian (BIC)                              3612.555    3612.555
+  Sample-size adjusted Bayesian (SABIC)       3539.592    3539.592
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.044       0.036
+  90 Percent confidence interval - lower         0.000       0.000
+  90 Percent confidence interval - upper         0.158       0.146
+  P-value H_0: RMSEA &lt;= 0.050                    0.372       0.423
+  P-value H_0: RMSEA &gt;= 0.080                    0.419       0.360
+                                                                  
+  Robust RMSEA                                                  NA
+  90 Percent confidence interval - lower                        NA
+  90 Percent confidence interval - upper                        NA
+  P-value H_0: Robust RMSEA &lt;= 0.050                            NA
+  P-value H_0: Robust RMSEA &gt;= 0.080                            NA
+
+Standardized Root Mean Square Residual (corr metric):
+
+  SRMR (within covariance matrix)                0.002       0.002
+  SRMR (between covariance matrix)               0.106       0.106
 
 Parameter Estimates:
 
@@ -1091,103 +1187,131 @@ Level 1 [within]:
 Regressions:
                            Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv
   PM_task_lenient_av_log ~                                             
-    vln_IND__. (c)            0.015    0.049    0.307    0.759    0.015
+    vl_IND__.  (c)            0.107    0.076    1.415    0.157    0.107
+    DS.c                      0.133    0.064    2.068    0.039    0.133
+    Mll_Hll.c                 0.154    0.105    1.464    0.143    0.154
+    agegrop.c                -0.735    0.206   -3.565    0.000   -0.735
+    order_c                   0.229    0.059    3.865    0.000    0.229
+    vlnc_IND_                 0.038    0.149    0.255    0.799    0.038
+    vlnc_fPM_                -0.079    0.131   -0.605    0.545   -0.079
+    af_PM___. (c2)            0.144    0.065    2.218    0.027    0.144
   c_tcaq ~                                                             
-    vln_IND__. (a)           -1.633    0.583   -2.800    0.005   -1.633
+    vl_IND__.  (a)           -2.942    0.708   -4.156    0.000   -2.942
+    DS.c                     -2.630    0.894   -2.942    0.003   -2.630
+    Mll_Hll.c                -1.745    1.464   -1.191    0.233   -1.745
+    agegrop.c                -9.758    2.837   -3.440    0.001   -9.758
+    order_c                   0.307    0.540    0.568    0.570    0.307
+    vlnc_IND_                 0.672    1.365    0.492    0.623    0.672
+    af_PM___. (a2)           -2.147    0.704   -3.049    0.002   -2.147
+    vlnc_fPM_                 1.308    1.339    0.977    0.329    1.308
   PM_task_lenient_av_log ~                                             
-    c_tcaq     (b)           -0.023    0.007   -3.056    0.002   -0.023
+    c_tcaq     (b)           -0.023    0.007   -3.165    0.002   -0.023
   Std.all
          
-    0.017
+    0.116
+    0.144
+    0.168
+   -0.397
+    0.202
+    0.020
+   -0.043
+    0.155
          
-   -0.196
+   -0.286
+   -0.256
+   -0.171
+   -0.474
+    0.024
+    0.033
+   -0.209
+    0.064
          
-   -0.215
+   -0.259
 
 Variances:
                    Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
-   .PM_tsk_lnnt_v_    0.736    0.082    8.971    0.000    0.736    0.952
-   .c_tcaq           65.562   10.101    6.490    0.000   65.562    0.961
+   .PM_tsk_lnnt_v_    0.675    0.071    9.498    0.000    0.675    0.792
+   .c_tcaq           64.372    9.968    6.458    0.000   64.372    0.612
 
 
 Level 2 [participant]:
 
 Intercepts:
                    Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
-   .PM_tsk_lnnt_v_    0.541    0.074    7.356    0.000    0.541    0.896
-   .c_tcaq           45.954    1.069   43.007    0.000   45.954    4.422
+   .PM_tsk_lnnt_v_    0.537    0.067    8.022    0.000    0.537    1.059
+   .c_tcaq           45.613    0.899   50.729    0.000   45.613    5.502
 
 Variances:
                    Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
-   .PM_tsk_lnnt_v_    0.365    0.089    4.099    0.000    0.365    1.000
-   .c_tcaq          107.989   14.318    7.542    0.000  107.989    1.000
+   .PM_tsk_lnnt_v_    0.257    0.074    3.479    0.001    0.257    1.000
+   .c_tcaq           68.735   11.504    5.975    0.000   68.735    1.000
 
 Defined Parameters:
                    Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
-    ab                0.037    0.018    2.073    0.038    0.037    0.042
-    total_valence     0.052    0.052    1.008    0.314    0.052    0.059</code></pre>
+    a2b               0.050    0.024    2.096    0.036    0.050    0.054
+    ab                0.069    0.027    2.498    0.013    0.069    0.074
+    total_valence     0.176    0.077    2.265    0.024    0.176    0.190
+    total_valence2    0.194    0.067    2.877    0.004    0.194    0.209</code></pre>
 </div>
+</div>
+</section>
+<section id="create-a-correlation-table-with-all-the-variables" class="level2">
+<h2 class="anchored" data-anchor-id="create-a-correlation-table-with-all-the-variables">Create a correlation table with all the variables</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>df_for_corr <span class="ot">&lt;-</span> long_df_merged <span class="sc">%&gt;%</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">group_by</span>(participant) <span class="sc">%&gt;%</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="at">agegroup =</span> <span class="fu">first</span>(agegroup),</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="at">education_y =</span> <span class="fu">first</span>(education_y),</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="at">health =</span> <span class="fu">first</span>(health),</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="at">fluid_intelligence =</span> <span class="fu">first</span>(DS), </span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="at">crystallized_intelligence =</span> <span class="fu">first</span>(Mill_Hill),</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="at">general_intrusive_thoughts =</span> <span class="fu">first</span>(tcaq_g),</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="at">task_related_intrusive_thoughts =</span> <span class="fu">mean</span>(c_tcaq, <span class="at">na.rm =</span> T),</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="at">PM_performance =</span> <span class="fu">mean</span>(PM_task_lenient_av, <span class="at">na.rm =</span> T),</span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="co">#baseline_valence = first(baseline_valence),</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a><span class="at">post_induction_valence_change =</span> <span class="fu">mean</span>(valence_aftIND_min_bef, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a><span class="at">post_task_valence_change =</span> <span class="fu">mean</span>(aft_PM_minus_after_ind, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_for_corr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output cell-output-stdout">
-<pre><code>lavaan 0.6-19 ended normally after 35 iterations
-
-  Estimator                                         ML
-  Optimization method                           NLMINB
-  Number of model parameters                        11
-
-                                                  Used       Total
-  Number of observations                           340         348
-  Number of clusters [participant]                 115            
-
-Model Test User Model:
-                                                      
-  Test statistic                                 9.275
-  Degrees of freedom                                 3
-  P-value (Chi-square)                           0.026
-
-Parameter Estimates:
-
-  Standard errors                             Standard
-  Information                                 Observed
-  Observed information based on                Hessian
-
-
-Level 1 [within]:
-
-Regressions:
-                       Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
-  PM_task_lenient_av ~                                                      
-    aft_PM___. (c)        0.027    0.016    1.670    0.095    0.027    0.094
-  c_tcaq ~                                                                  
-    aft_PM___. (a)        0.051    0.519    0.099    0.921    0.051    0.006
-  PM_task_lenient_av ~                                                      
-    c_tcaq     (b)       -0.008    0.002   -3.679    0.000   -0.008   -0.234
-
-Variances:
-                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
-   .PM_task_lnnt_v    0.075    0.007   10.555    0.000    0.075    0.937
-   .c_tcaq           69.480    6.578   10.562    0.000   69.480    1.000
-
-
-Level 2 [participant]:
-
-Intercepts:
-                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
-   .PM_task_lnnt_v    0.682    0.023   30.150    0.000    0.682    3.829
-   .c_tcaq           45.927    1.059   43.372    0.000   45.927    4.475
-    aft_PM_mns_f_.   -0.012    0.050   -0.244    0.807   -0.012       NA
-
-Variances:
-                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
-   .PM_task_lnnt_v    0.032    0.008    3.868    0.000    0.032    1.000
-   .c_tcaq          105.321   17.134    6.147    0.000  105.321    1.000
-    aft_PM_mns_f_.   -0.038    0.038   -1.001    0.317   -0.038    1.000
-
-Defined Parameters:
-                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
-    ab               -0.000    0.004   -0.099    0.921   -0.000   -0.001
-    total_valence     0.027    0.017    1.605    0.109    0.027    0.092</code></pre>
+<pre><code>tibble [120 × 11] (S3: tbl_df/tbl/data.frame)
+ $ participant                    : int [1:120] 1 2 3 5 6 7 8 9 10 11 ...
+ $ agegroup                       : Factor w/ 2 levels "YA","OA": 1 1 1 1 1 1 1 1 1 1 ...
+ $ education_y                    : int [1:120] 14 16 18 16 14 15 4 14 16 19 ...
+ $ health                         : int [1:120] 4 3 4 4 5 4 4 5 4 5 ...
+ $ fluid_intelligence             : int [1:120] 54 63 56 37 50 88 46 50 52 63 ...
+ $ crystallized_intelligence      : int [1:120] 16 14 18 24 16 20 14 19 13 13 ...
+ $ general_intrusive_thoughts     : int [1:120] 79 63 58 81 82 86 82 96 93 63 ...
+ $ task_related_intrusive_thoughts: num [1:120] 35 43 38.7 57.3 54.5 ...
+ $ PM_performance                 : num [1:120] 0.833 0.611 0.722 0.667 0.722 ...
+ $ post_induction_valence_change  : num [1:120] 6.5 1.17 -6.67 1.83 -0.5 ...
+ $ post_task_valence_change       : num [1:120] 1.67 -2.33 -3 2.67 -5.33 ...</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># confert age group to numeric</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>df_for_corr<span class="sc">$</span>agegroup<span class="ot">&lt;-</span><span class="fu">ifelse</span>(df_for_corr<span class="sc">$</span>agegroup<span class="sc">==</span><span class="st">"YA"</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>cor_tbl<span class="ot">&lt;-</span><span class="fu">corr.test</span>(df_for_corr[, <span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(df_for_corr)], <span class="at">use =</span> <span class="st">"pairwise"</span>, <span class="at">method =</span> <span class="st">"pearson"</span>, <span class="at">adjust =</span> <span class="st">"none"</span>)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>corr_table <span class="ot">&lt;-</span> <span class="fu">round</span>(cor_tbl<span class="sc">$</span>r, <span class="dv">2</span>)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>p_table <span class="ot">&lt;-</span> <span class="fu">round</span>(cor_tbl<span class="sc">$</span>p, <span class="dv">4</span>)</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sink</span>(<span class="st">"correlation_table.txt"</span>)</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Correlation matrix</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">round</span>(cor_tbl<span class="sc">$</span>r, <span class="dv">2</span>))</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">P-value matrix</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">round</span>(cor_tbl<span class="sc">$</span>p, <span class="dv">4</span>))</span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a><span class="fu">sink</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
+<p><a href="associational pathway diagram.jpgabn">!Associational variable analysis diagram</a></p>
 
 
 </section>
