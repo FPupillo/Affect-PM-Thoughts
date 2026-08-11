@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Rainclouds Tutorial in R</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-ece42c8223ec2bf36298a08f122c9a68.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Rainclouds Tutorial in R</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="package-dependencies" class="level2">
+<h2 class="anchored" data-anchor-id="package-dependencies">Package dependencies</h2>
+<p>Make sure we have the packages we need, and install them if they are missing.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>packages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"ggplot2"</span>, <span class="st">"dplyr"</span>, <span class="st">"lavaan"</span>, <span class="st">"plyr"</span>, <span class="st">"cowplot"</span>, <span class="st">"rmarkdown"</span>, </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">"readr"</span>, <span class="st">"caTools"</span>, <span class="st">"bitops"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(<span class="fu">setdiff</span>(packages, <span class="fu">rownames</span>(<span class="fu">installed.packages</span>()))) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="fu">setdiff</span>(packages, <span class="fu">rownames</span>(<span class="fu">installed.packages</span>())))  </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="how-to-make-it-rain" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-make-it-rain">How to make it rain</h2>
+<p>There are two ways to create <code>raincloudplots</code> in R: Through a series of specific easy to modify scripts, and through our new tailored package, <a href="https://github.com/jorvlan/raincloudplots"><code>raincloudplots</code></a>. The former provides a step-by-step walkthrough with individual scripts which can be modified as needed. The latter provides an easy-to-use set of functions for the most common experimental designs and data formats.</p>
+<p>First, this tutorial will walk you through the process of transforming your barplots into rainclouds, and also show you how to customize your rainclouds for various options such as ordinal or repeated measures data. Further down below, we will show two example figures that one can make with our R package.</p>
+<p>If you’d like to see this notebook with the output rendered, checkout <a href="https://github.com/RainCloudPlots/RainCloudPlots/blob/master/tutorial_R/raincloud_tutorial_r.md">raincloud_tutorial_r.md</a> or <a href="https://github.com/RainCloudPlots/RainCloudPlots/blob/master/tutorial_R/raincloud_tutorial_r.pdf">raincloud_tutorial_r.pdf</a>.</p>
+<p>First, we’ll run the included “R_rainclouds” script, which will set-up the split-half violin option in ggplot, as well as simulate some data for our figures:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R_rainclouds.R"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"summarySE.R"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"simulateData.R"</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># width and height variables for saved plots</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>w <span class="ot">=</span> <span class="dv">6</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>h <span class="ot">=</span> <span class="dv">3</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the figure folder if it doesn't exist yet</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">'../figs/tutorial_R/'</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(summary_simdat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>##    group   N score_mean score_median       sd       se       ci
+## 1 Group1 250   49.45877     42.74587 25.27975 1.598832 3.148958
+## 2 Group2 250   51.94353     52.69956 25.06328 1.585141 3.121994</code></pre>
+<p>The function gives us two groups of N = 250 observations each; both have similar means and SDs, but group one is drawn from an exponential distribution. Now we will plot a basic barplot for our simulated data. Note that we’re using the ‘cowplot’ theme to produce simple, uncluttered plots - you should setup your own theme or other customization options as desired:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Barplot</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(summary_simdat, <span class="fu">aes</span>(<span class="at">x =</span> group, <span class="at">y =</span> score_mean, <span class="at">fill =</span> group))<span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">width =</span> .<span class="dv">8</span>)<span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> score_mean <span class="sc">-</span> se, <span class="at">ymax =</span> score_mean<span class="sc">+</span>se), <span class="at">width =</span> .<span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">80</span>)<span class="sc">+</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">'Score'</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">'Group'</span>)<span class="sc">+</span><span class="fu">theme_cowplot</span>()<span class="sc">+</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Figure 1: Barplot +/- SEM"</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">'../figs/tutorial_R/1Barplot.png'</span>, <span class="at">width =</span> w, <span class="at">height =</span> h)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Lets look at the plot inline too :)</p>
+<p>(If you see the error <code>Error in grid.newpage() : could not open file ...</code> when running this tutorial in binder: don’t worry! RStudio in binder is just a little slower than you’d hope to present the plot to you inline. Wait a couple of seconds and then run the cell again and the image will appear.)</p>
+<p><img src="figs/figure 1-1.png" class="img-fluid"><!-- --></p>
+<p>There we go - just needs some little asterixes and we’re ready to publish! Just kidding. Let’s start our first, most basic raincloud plot like so, using the ‘geom_flat_violin’ option our function already setup for us:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Basic plot</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(simdat,<span class="fu">aes</span>(<span class="at">x=</span>group,<span class="at">y=</span>score))<span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_flat_violin</span>(<span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">2</span>, <span class="at">y =</span> <span class="dv">0</span>),<span class="at">adjust =</span><span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> .<span class="dv">15</span>, <span class="at">height =</span> <span class="dv">0</span>), <span class="at">size =</span> .<span class="dv">25</span>)<span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">'Score'</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">'Group'</span>)<span class="sc">+</span><span class="fu">theme_cowplot</span>()<span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Figure 2: Basic Rainclouds or Little Prince Plot'</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">'../figs/tutorial_R/2basic.png'</span>, <span class="at">width =</span> w, <span class="at">height =</span> h)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="figs/figure 2-1.png" class="img-fluid"><!-- --></p>
+<p>Now we can see the raw data (our ‘rain’), and the overlaid probability distribution (the ‘cloud’). Let’s make it a bit prettier and easier to read by adding some colours. We can also use ‘coordinate flip’ to rotate the entire plot about the x-axis, transforming our ‘little prince plots’ into true rainclouds:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot with colours and coordinate flip</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(simdat,<span class="fu">aes</span>(<span class="at">x=</span>group,<span class="at">y=</span>score, <span class="at">fill =</span> group))<span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_flat_violin</span>(<span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">2</span>, <span class="at">y =</span> <span class="dv">0</span>),<span class="at">adjust =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> .<span class="dv">15</span>, <span class="at">height =</span> <span class="dv">0</span>), <span class="at">size =</span> .<span class="dv">25</span>)<span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">'Score'</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">'Group'</span>)<span class="sc">+</span><span class="fu">coord_flip</span>()<span class="sc">+</span><span class="fu">theme_cowplot</span>()<span class="sc">+</span><span class="fu">guides</span>(<span class="at">fill =</span> <span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Figure 3: The Basic Raincloud with Colour'</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">'../figs/tutorial_R/3pretty.png'</span>, <span class="at">width =</span> w, <span class="at">height =</span> h)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="figs/figure 3-1.png" class="img-fluid"><!-- --></p>
+<p>In case you want to change the smoothing kernel used to calculate the PDFs, you can do so by altering the ‘adjust’ flag for geom_flat_violin. For example, here we’ve dropped our smoothing to give a much bumpier raincloud:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Raincloud with reduced smoothing</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(simdat,<span class="fu">aes</span>(<span class="at">x=</span>group,<span class="at">y=</span>score, <span class="at">fill =</span> group))<span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_flat_violin</span>(<span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">2</span>, <span class="at">y =</span> <span class="dv">0</span>),<span class="at">adjust =</span> .<span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> .<span class="dv">15</span>, <span class="at">height =</span> <span class="dv">0</span>), <span class="at">size =</span> .<span class="dv">25</span>)<span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">'Score'</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">'Group'</span>)<span class="sc">+</span><span class="fu">coord_flip</span>()<span class="sc">+</span><span class="fu">theme_cowplot</span>()<span class="sc">+</span><span class="fu">guides</span>(<span class="at">fill =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'Figure 4: Unsmooth Rainclouds'</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">'../figs/tutorial_R/4unsmooth.png'</span>, <span class="at">width =</span> w, <span class="at">height =</span> h)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="figs/figure 4-1.png" class="img-fluid"><!-- --></p>
+<p>Now we need to add something to help us easily evaluate any possible differences between our groups or conditions. To achieve this, we’ll add some boxplots to complete our raincloud plots. To get the boxplots to line up however we like, we need to set our x-axis to a numeric value, so we can add a fixed offset:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Rainclouds with boxplots</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>p5 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(simdat,<span class="fu">aes</span>(<span class="at">x=</span>group,<span class="at">y=</span>score, <span class="at">fill =</span> group))<span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_flat_violin</span>(<span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">25</span>, <span class="at">y =</span> <span class="dv">0</span>),<span class="at">adjust =</span><span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> .<span class="dv">15</span>, <span class="at">height =</span> <span class="dv">0</span>), <span class="at">size =</span> .<span class="dv">25</span>)<span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#note that here we need to set the x-variable to a numeric variable AND factor and bump it to get the boxplots to line up with the rainclouds. </span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(group))<span class="sc">+</span><span class="fl">0.25</span>, <span class="at">y =</span> score), <span class="at">outlier.shape =</span> <span class="cn">NA</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">width =</span> .<span class="dv">1</span>, <span class="at">colour =</span> <span class="st">"BLACK"</span>) <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">'Score'</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">'Group'</span>)<span class="sc">+</span><span class="fu">coord_flip</span>()<span class="sc">+</span><span class="fu">theme_cowplot</span>()<span class="sc">+</span><span class="fu">guides</span>(<span class="at">fill =</span> <span class="cn">FALSE</span>, <span class="at">colour =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Figure 5: Raincloud Plot w/Boxplots"</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">'../figs/tutorial_R/5boxplots.png'</span>, <span class="at">width =</span> w, <span class="at">height =</span> h)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="figs/figure 5-1.png" class="img-fluid"><!-- --></p>
+<p>Now we’ll make a few aesthetic tweaks. You may want to turn these on or off depending on your preferences. We’ll take the black outline away from the plots by adding the colour = group parameter, and we’ll also change colour palettes using the built-in colour brewer tool.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Rainclouds with boxplots</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>p6 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(simdat,<span class="fu">aes</span>(<span class="at">x=</span>group,<span class="at">y=</span>score, <span class="at">fill =</span> group, <span class="at">colour =</span> group))<span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_flat_violin</span>(<span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">25</span>, <span class="at">y =</span> <span class="dv">0</span>),<span class="at">adjust =</span><span class="dv">2</span>, <span class="at">trim =</span> <span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> .<span class="dv">15</span>, <span class="at">height =</span> <span class="dv">0</span>), <span class="at">size =</span> .<span class="dv">25</span>)<span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(group))<span class="sc">+</span><span class="fl">0.25</span>, <span class="at">y =</span> score),<span class="at">outlier.shape =</span> <span class="cn">NA</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">width =</span> .<span class="dv">1</span>, <span class="at">colour =</span> <span class="st">"BLACK"</span>) <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">'Score'</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">'Group'</span>)<span class="sc">+</span><span class="fu">coord_flip</span>()<span class="sc">+</span><span class="fu">theme_cowplot</span>()<span class="sc">+</span><span class="fu">guides</span>(<span class="at">fill =</span> <span class="cn">FALSE</span>, <span class="at">colour =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>)<span class="sc">+</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>)<span class="sc">+</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Figure 6: Change in Colour Palette"</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">'../figs/tutorial_R/6boxplots.png'</span>, <span class="at">width =</span> w, <span class="at">height =</span> h)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="figs/figure 6-1.png" class="img-fluid"><!-- --></p>
+<p>Alternatively, you may prefer to simply plot mean or median with standard confidence intervals. Here we’ll plot the mean as well as 95% confidence intervals, which we’ve calculated using the included SummarySE function, by overlaying them on our clouds:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Rainclouds with mean and confidence interval</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>p7 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(simdat,<span class="fu">aes</span>(<span class="at">x=</span>group,<span class="at">y=</span>score, <span class="at">fill =</span> group, <span class="at">colour =</span> group))<span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_flat_violin</span>(<span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">25</span>, <span class="at">y =</span> <span class="dv">0</span>),<span class="at">adjust =</span><span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> .<span class="dv">15</span>, <span class="at">height =</span> <span class="dv">0</span>), <span class="at">size =</span> .<span class="dv">25</span>)<span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> summary_simdat, <span class="fu">aes</span>(<span class="at">x =</span> group, <span class="at">y =</span> score_mean), <span class="at">position =</span> <span class="fu">position_nudge</span>(.<span class="dv">25</span>), <span class="at">colour =</span> <span class="st">"BLACK"</span>)<span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">data =</span> summary_simdat, <span class="fu">aes</span>(<span class="at">x =</span> group, <span class="at">y =</span> score_mean, <span class="at">ymin =</span> score_mean<span class="sc">-</span>ci, <span class="at">ymax =</span> score_mean<span class="sc">+</span>ci), <span class="at">position =</span> <span class="fu">position_nudge</span>(.<span class="dv">25</span>), <span class="at">colour =</span> <span class="st">"BLACK"</span>, <span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">size =</span> <span class="fl">0.8</span>)<span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">'Score'</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">'Group'</span>)<span class="sc">+</span><span class="fu">coord_flip</span>()<span class="sc">+</span><span class="fu">theme_cowplot</span>()<span class="sc">+</span><span class="fu">guides</span>(<span class="at">fill =</span> <span class="cn">FALSE</span>, <span class="at">colour =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>)<span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>)<span class="sc">+</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Figure 7: Raincloud Plot with Mean ± 95% CI"</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">'../figs/tutorial_R/7meanplot.png'</span>, <span class="at">width =</span> w, <span class="at">height =</span> h)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="figs/figure 7-1.png" class="img-fluid"><!-- --></p>
+<p>If your data is discrete or ordinal you may need to manually add some jitter to improve the plot:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Rainclouds with striated data</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Round data</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>simdat_round<span class="ot">&lt;-</span>simdat</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>simdat_round<span class="sc">$</span>score<span class="ot">&lt;-</span><span class="fu">round</span>(simdat<span class="sc">$</span>score,<span class="dv">0</span>) </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Striated/grouped when no jitter applied</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>ap1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(simdat_round,<span class="fu">aes</span>(<span class="at">x=</span>group,<span class="at">y=</span>score,<span class="at">fill=</span>group,<span class="at">col=</span>group))<span class="sc">+</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_flat_violin</span>(<span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">2</span>, <span class="at">y =</span> <span class="dv">0</span>), <span class="at">alpha =</span> .<span class="dv">6</span>,<span class="at">adjust =</span><span class="dv">4</span>)<span class="sc">+</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">'Score'</span>)<span class="sc">+</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>)<span class="sc">+</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>)<span class="sc">+</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">guides</span>(<span class="at">fill =</span> <span class="cn">FALSE</span>, <span class="at">col =</span> <span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">'Striated'</span>)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co">#Added jitter helps</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>ap2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(simdat_round,<span class="fu">aes</span>(<span class="at">x=</span>group,<span class="at">y=</span>score,<span class="at">fill=</span>group,<span class="at">col=</span>group))<span class="sc">+</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_flat_violin</span>(<span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">2</span>, <span class="at">y =</span> <span class="dv">0</span>), <span class="at">alpha =</span> .<span class="dv">4</span>,<span class="at">adjust =</span><span class="dv">4</span>)<span class="sc">+</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">position=</span><span class="fu">position_jitter</span>(<span class="at">width =</span> .<span class="dv">15</span>, <span class="at">height =</span> <span class="dv">0</span>),<span class="at">size =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">'Score'</span>)<span class="sc">+</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>)<span class="sc">+</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>)<span class="sc">+</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">guides</span>(<span class="at">fill =</span> <span class="cn">FALSE</span>, <span class="at">col =</span> <span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">'Added jitter'</span>)</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>all_plot <span class="ot">&lt;-</span> <span class="fu">plot_grid</span>(ap1, ap2, <span class="at">labels=</span><span class="st">"AUTO"</span>)</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="co"># add title to cowplot</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="fu">ggdraw</span>() <span class="sc">+</span> </span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_label</span>(<span class="st">"Figure 8: Jittering Ordinal Data"</span>,</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>             <span class="at">fontface =</span> <span class="st">'bold'</span>)</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>all_plot_final <span class="ot">&lt;-</span> <span class="fu">plot_grid</span>(title, all_plot, <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">rel_heights =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="dv">1</span>)) <span class="co"># rel_heights values control title margins</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">'../figs/tutorial_R/8allplot.png'</span>, <span class="at">width =</span> w, <span class="at">height =</span> h)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="figs/figure 8-1.png" class="img-fluid"><!-- --></p>
+<p>Finally, in many situations you may have nested, factorial, or repeated measures data. In this case, one option is to use plot facets to group by factor, emphasizing pairwise differences between conditions or factor levels:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Add additional factor/condition</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>simdat<span class="sc">$</span>gr2<span class="ot">&lt;-</span><span class="fu">as.factor</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">'high'</span>,<span class="dv">125</span>),<span class="fu">rep</span>(<span class="st">'low'</span>,<span class="dv">125</span>),<span class="fu">rep</span>(<span class="st">'high'</span>,<span class="dv">125</span>),<span class="fu">rep</span>(<span class="st">'low'</span>,<span class="dv">125</span>)))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>p9 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(simdat,<span class="fu">aes</span>(<span class="at">x=</span>group,<span class="at">y=</span>score, <span class="at">fill =</span> group, <span class="at">colour =</span> group))<span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_flat_violin</span>(<span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">25</span>, <span class="at">y =</span> <span class="dv">0</span>),<span class="at">adjust =</span><span class="dv">2</span>, <span class="at">trim =</span> <span class="cn">TRUE</span>)<span class="sc">+</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> .<span class="dv">15</span>, <span class="at">height =</span> <span class="dv">0</span>), <span class="at">size =</span> .<span class="dv">25</span>)<span class="sc">+</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(group))<span class="sc">+</span><span class="fl">0.25</span>, <span class="at">y =</span> score),<span class="at">outlier.shape =</span> <span class="cn">NA</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">width =</span> .<span class="dv">1</span>, <span class="at">colour =</span> <span class="st">"BLACK"</span>) <span class="sc">+</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">'Score'</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">'Group'</span>)<span class="sc">+</span><span class="fu">coord_flip</span>()<span class="sc">+</span><span class="fu">theme_cowplot</span>()<span class="sc">+</span><span class="fu">guides</span>(<span class="at">fill =</span> <span class="cn">FALSE</span>, <span class="at">colour =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span>gr2)<span class="sc">+</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>)<span class="sc">+</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>)<span class="sc">+</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Figure 9: Complex Raincloud Plots with Facet Wrap"</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">'../figs/tutorial_R/9facetplot.png'</span>, <span class="at">width =</span> w, <span class="at">height =</span> h)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="figs/figure 9-1.png" class="img-fluid"><!-- --></p>
+<p>As another example, we consider some simulated repeated measures data in factorial design, where two groups are measured across three timepoints. To do so, we’ll first load in some new data:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#load the repeated measures factorial data</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>rep_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"repeated_measures_data.csv"</span>, </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">col_types =</span> <span class="fu">cols</span>(<span class="at">group =</span> <span class="fu">col_factor</span>(<span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2"</span>)), <span class="at">time =</span> <span class="fu">col_factor</span>(<span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2"</span>, <span class="st">"3"</span>))))</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>sumrepdat <span class="ot">&lt;-</span> <span class="fu">summarySE</span>(rep_data, <span class="at">measurevar =</span> <span class="st">"score"</span>, <span class="at">groupvars=</span><span class="fu">c</span>(<span class="st">"group"</span>, <span class="st">"time"</span>))</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sumrepdat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>##   group time  N score_mean score_median       sd        se        ci
+## 1     1    1 18   6.362222        6.670 1.658861 0.3909972 0.8249319
+## 2     1    2 18   7.468333        7.730 1.546880 0.3646032 0.7692454
+## 3     1    3 18  10.482778       10.455 1.060254 0.2499043 0.5272520
+## 4     2    1 11   1.847273        1.210 2.010279 0.6061219 1.3505238
+## 5     2    2 11   3.684545        2.920 2.135108 0.6437594 1.4343852
+## 6     2    3 11   7.358182        7.020 2.236273 0.6742616 1.5023486</code></pre>
+<p>Now, we’ll plot our rainclouds with boxplots again, this time adding some dodge so we can better emphasize differences between our factors and factor levels. Note that here we need to nudge the point x-axis as a numeric valuable, as this work around does not currently work for boxplots with multiple factors:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rainclouds for repeated measures, continued </span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>p10 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(rep_data, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> score, <span class="at">fill =</span> group)) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_flat_violin</span>(<span class="fu">aes</span>(<span class="at">fill =</span> group),<span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">1</span>, <span class="at">y =</span> <span class="dv">0</span>), <span class="at">adjust =</span> <span class="fl">1.5</span>, <span class="at">trim =</span> <span class="cn">FALSE</span>, <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">colour =</span> <span class="cn">NA</span>)<span class="sc">+</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(time)<span class="sc">-</span>.<span class="dv">15</span>, <span class="at">y =</span> score, <span class="at">colour =</span> group),<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> .<span class="dv">05</span>, <span class="at">height =</span> <span class="dv">0</span>), <span class="at">size =</span> <span class="dv">1</span>, <span class="at">shape =</span> <span class="dv">20</span>)<span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> score, <span class="at">fill =</span> group),<span class="at">outlier.shape =</span> <span class="cn">NA</span>, <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">width =</span> .<span class="dv">1</span>, <span class="at">colour =</span> <span class="st">"black"</span>)<span class="sc">+</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>)<span class="sc">+</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>)<span class="sc">+</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Figure 10: Repeated Measures Factorial Rainclouds"</span>) <span class="sc">+</span> <span class="fu">theme_classic</span>()</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">'../figs/tutorial_R/10repanvplot.png'</span>, <span class="at">width =</span> w, <span class="at">height =</span> h)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="figs/figure 10-1.png" class="img-fluid"><!-- --></p>
+<p>Finally, you may want to add traditional line plots to emphasize factorial interactions and main effects. Here we’ve plotted the mean and standard error for each cell of our design, and connected these with a hashed line. There are a lot of possible options though, so you’ll need to decide what works best for your needs:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Rainclouds for repeated measures, additional plotting options </span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>p11 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(rep_data, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> score, <span class="at">fill =</span> group)) <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_flat_violin</span>(<span class="fu">aes</span>(<span class="at">fill =</span> group),<span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">1</span>, <span class="at">y =</span> <span class="dv">0</span>), <span class="at">adjust =</span> <span class="fl">1.5</span>, <span class="at">trim =</span> <span class="cn">FALSE</span>, <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">colour =</span> <span class="cn">NA</span>)<span class="sc">+</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(time)<span class="sc">-</span>.<span class="dv">15</span>, <span class="at">y =</span> score, <span class="at">colour =</span> group),<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> .<span class="dv">05</span>, <span class="at">height =</span> <span class="dv">0</span>), <span class="at">size =</span> .<span class="dv">25</span>, <span class="at">shape =</span> <span class="dv">20</span>)<span class="sc">+</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> score, <span class="at">fill =</span> group),<span class="at">outlier.shape =</span> <span class="cn">NA</span>, <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">width =</span> .<span class="dv">1</span>, <span class="at">colour =</span> <span class="st">"black"</span>)<span class="sc">+</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> sumrepdat, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(time)<span class="sc">+</span>.<span class="dv">1</span>, <span class="at">y =</span> score_mean, <span class="at">group =</span> group, <span class="at">colour =</span> group), <span class="at">linetype =</span> <span class="dv">3</span>)<span class="sc">+</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> sumrepdat, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(time)<span class="sc">+</span>.<span class="dv">1</span>, <span class="at">y =</span> score_mean, <span class="at">group =</span> group, <span class="at">colour =</span> group), <span class="at">shape =</span> <span class="dv">18</span>) <span class="sc">+</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">data =</span> sumrepdat, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(time)<span class="sc">+</span>.<span class="dv">1</span>, <span class="at">y =</span> score_mean, <span class="at">group =</span> group, <span class="at">colour =</span> group, <span class="at">ymin =</span> score_mean<span class="sc">-</span>se, <span class="at">ymax =</span> score_mean<span class="sc">+</span>se), <span class="at">width =</span> .<span class="dv">05</span>)<span class="sc">+</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>)<span class="sc">+</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>)<span class="sc">+</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Figure 11: Repeated Measures - Factorial (Extended)"</span>) <span class="sc">+</span> <span class="fu">theme_classic</span>()</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">'../figs/tutorial_R/11repanvplot2.png'</span>, <span class="at">width =</span> w, <span class="at">height =</span> h)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="figs/figure 11-1.png" class="img-fluid"><!-- --></p>
+<p>Here is the same plot, but with the grouping variable flipped:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Rainclouds for repeated measures, additional plotting options </span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>p12 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(rep_data, <span class="fu">aes</span>(<span class="at">x =</span> group, <span class="at">y =</span> score, <span class="at">fill =</span> time)) <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_flat_violin</span>(<span class="fu">aes</span>(<span class="at">fill =</span> time),<span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> .<span class="dv">1</span>, <span class="at">y =</span> <span class="dv">0</span>), <span class="at">adjust =</span> <span class="fl">1.5</span>, <span class="at">trim =</span> <span class="cn">FALSE</span>, <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">colour =</span> <span class="cn">NA</span>)<span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(group)<span class="sc">-</span>.<span class="dv">15</span>, <span class="at">y =</span> score, <span class="at">colour =</span> time),<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> .<span class="dv">05</span>, <span class="at">height =</span> <span class="dv">0</span>), <span class="at">size =</span> .<span class="dv">25</span>, <span class="at">shape =</span> <span class="dv">20</span>)<span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> group, <span class="at">y =</span> score, <span class="at">fill =</span> time),<span class="at">outlier.shape =</span> <span class="cn">NA</span>, <span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">width =</span> .<span class="dv">1</span>, <span class="at">colour =</span> <span class="st">"black"</span>)<span class="sc">+</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> sumrepdat, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(group)<span class="sc">+</span>.<span class="dv">1</span>, <span class="at">y =</span> score_mean, <span class="at">group =</span> time, <span class="at">colour =</span> time), <span class="at">linetype =</span> <span class="dv">3</span>)<span class="sc">+</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> sumrepdat, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(group)<span class="sc">+</span>.<span class="dv">1</span>, <span class="at">y =</span> score_mean, <span class="at">group =</span> time, <span class="at">colour =</span> time), <span class="at">shape =</span> <span class="dv">18</span>) <span class="sc">+</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">data =</span> sumrepdat, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(group)<span class="sc">+</span>.<span class="dv">1</span>, <span class="at">y =</span> score_mean, <span class="at">group =</span> time, <span class="at">colour =</span> time, <span class="at">ymin =</span> score_mean<span class="sc">-</span>se, <span class="at">ymax =</span> score_mean<span class="sc">+</span>se), <span class="at">width =</span> .<span class="dv">05</span>)<span class="sc">+</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>)<span class="sc">+</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>)<span class="sc">+</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Figure 12: Repeated Measures - Factorial (Extended)"</span>) <span class="sc">+</span> <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">'../figs/tutorial_R/12repanvplot3.png'</span>, <span class="at">width =</span> w, <span class="at">height =</span> h)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="figs/figure 12-1.png" class="img-fluid"><!-- --></p>
+</section>
+<section id="r-package---raincloudplots" class="level2">
+<h2 class="anchored" data-anchor-id="r-package---raincloudplots">R package - <code>raincloudplots</code></h2>
+<p>In addition to this step-by-step tutorial, we have developed two other tools to visualize data in rainclouds, which are primarily suited for repeated measures data. First, we wrote an extensive GitHub tutorial called ‘open-visualizations’ (https://github.com/jorvlan/open-visualizations) which provides detailed and extensive R code to create robust and transparent repeated measures visualizations, by showing the slope change for each individual data point over time. To date, this tutorial has been cited in 15 scientific papers. However, using this tutorial requires sufficient R programming knowledge and might therefore not be suitable for non-R experts. Therefore, we have created a dedicated <code>raincloudplots</code> package (https://github.com/jorvlan/raincloudplots) written in R. This package is tailored towards easy visualization of grouped and repeated measures data. Moreover, it also provides individually linked repeated measures visualizations, which add detail and richness to a multitude of within-subject designs. Here, we have chosen to depict the two most common repeated measures designs: 1 * 1 and 2 * 2. The following examples show you some ways to use the package for simple between and within subject designs. The package contains more <code>raincloudplots</code> that you can make, please visit the (https://github.com/jorvlan/raincloudplots) to see all the examples.</p>
+<p>Install the package</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(remotes)) {</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">install.packages</span>(<span class="st">"remotes"</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">'jorvlan/raincloudplots'</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(raincloudplots)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>w_package <span class="ot">=</span> <span class="dv">3</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>h_package <span class="ot">=</span> <span class="dv">6</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="by-1-repeated-measures" class="level2">
+<h2 class="anchored" data-anchor-id="by-1-repeated-measures">1 by 1 repeated measures</h2>
+<p>Step 1: Initialize the data-format</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df_1x1 <span class="ot">&lt;-</span> <span class="fu">data_1x1</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">array_1 =</span> iris<span class="sc">$</span>Sepal.Length[<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>],</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">array_2 =</span> iris<span class="sc">$</span>Sepal.Length[<span class="dv">51</span><span class="sc">:</span><span class="dv">100</span>],</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">jit_distance =</span> .<span class="dv">09</span>,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">jit_seed =</span> <span class="dv">321</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Step 2: Create the plot</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>raincloud_1 <span class="ot">&lt;-</span> <span class="fu">raincloud_1x1_repmes</span>(</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_1x1,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">colors =</span> (<span class="fu">c</span>(<span class="st">'dodgerblue'</span>, <span class="st">'darkorange'</span>)),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">fills =</span> (<span class="fu">c</span>(<span class="st">'dodgerblue'</span>, <span class="st">'darkorange'</span>)),</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">line_color =</span> <span class="st">'gray'</span>,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">line_alpha =</span> .<span class="dv">3</span>,</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> <span class="dv">1</span>,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">alpha =</span> .<span class="dv">6</span>,</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">align_clouds =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"Pre"</span>, <span class="st">"Post"</span>), <span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>)) <span class="sc">+</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Time"</span>) <span class="sc">+</span> </span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Score"</span>) <span class="sc">+</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">'../figs/tutorial_R/package1.png'</span>, <span class="at">width =</span> w_package, <span class="at">height =</span> h_package)</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>raincloud_1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="figs/raincloud_1-1.png" class="img-fluid"><!-- --></p>
+</section>
+<section id="by-2-repeated-measures" class="level2">
+<h2 class="anchored" data-anchor-id="by-2-repeated-measures">2 by 2 repeated measures</h2>
+<p>Step 1: Initialize the data-format</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>df_2x2 <span class="ot">&lt;-</span> <span class="fu">data_2x2</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">array_1 =</span> iris<span class="sc">$</span>Sepal.Length[<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>],</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">array_2 =</span> iris<span class="sc">$</span>Sepal.Length[<span class="dv">51</span><span class="sc">:</span><span class="dv">100</span>],</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">array_3 =</span> iris<span class="sc">$</span>Sepal.Length[<span class="dv">101</span><span class="sc">:</span><span class="dv">150</span>],</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">array_4 =</span> iris<span class="sc">$</span>Sepal.Length[<span class="dv">81</span><span class="sc">:</span><span class="dv">130</span>],</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">labels =</span> (<span class="fu">c</span>(<span class="st">'congruent'</span>,<span class="st">'incongruent'</span>)),</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">jit_distance =</span> .<span class="dv">09</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">jit_seed =</span> <span class="dv">321</span>,</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">spread_x_ticks =</span> <span class="cn">TRUE</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Step 2: Create the plot</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>raincloud_2 <span class="ot">&lt;-</span> <span class="fu">raincloud_2x2_repmes</span>(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_2x2,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">colors =</span> (<span class="fu">c</span>(<span class="st">'dodgerblue'</span>, <span class="st">'darkorange'</span>, <span class="st">'dodgerblue'</span>, <span class="st">'darkorange'</span>)),</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">fills =</span> (<span class="fu">c</span>(<span class="st">'dodgerblue'</span>, <span class="st">'darkorange'</span>, <span class="st">'dodgerblue'</span>, <span class="st">'darkorange'</span>)),</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">line_color =</span> <span class="st">'gray'</span>,</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">line_alpha =</span> .<span class="dv">3</span>,</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> <span class="dv">1</span>,</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">alpha =</span> .<span class="dv">6</span>,</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">spread_x_ticks =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_x_continuous</span>(<span class="at">breaks=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>), <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"Pre"</span>, <span class="st">"Post"</span>, <span class="st">"Pre"</span>, <span class="st">"Post"</span>), <span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Time"</span>) <span class="sc">+</span> </span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Score"</span>) <span class="sc">+</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() </span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">'../figs/tutorial_R/package2.png'</span>, <span class="at">width =</span> w_package, <span class="at">height =</span> h_package)</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>raincloud_2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><img src="figs/raincloud_2-1.png" class="img-fluid"><!-- --></p>
+<p>That’s it! We hope you’ll be able to use this tutorial to find great illustrations for your data, and that we’ve given you an idea of some of the different ways you can customize your raincloud plots.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

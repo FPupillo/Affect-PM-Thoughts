@@ -3,7 +3,8 @@
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 
 
-required_packages <- c("ggplot2", 
+required_packages <- c("ggplot2",
+                       "tidyverse",
                        "haven", 
                        "dplyr", 
                        "lme4",

@@ -326,5 +326,5 @@ print(round(cor_tbl$p, 4))
 sink()
 
 ```
-
-[!Associational variable analysis diagram](associational pathway diagram.jpgabn)
+## 
+![Associational variable analysis diagram](associational pathway diagram.jpg)
