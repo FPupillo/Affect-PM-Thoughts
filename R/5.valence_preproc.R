@@ -56,7 +56,7 @@ ggplot(aft_bef,aes(x=cond,y=valence_aft_ind_min_base, fill = cond,
   theme_classic()+
   
   theme(legend.position = "none")+
-  params+
+  #params+
   ylab("Valence change after induction")+
   xlab("")
 )
@@ -134,7 +134,7 @@ ggplot(long_df_merged,aes(x=cond,y=valence_aftIND_min_bef, fill = cond,
   theme_classic()+
   
   theme(legend.position = "none")+
-  params+
+  #params+
   ylab("Valence valence_after_ind")+
   xlab("")
 )
@@ -152,7 +152,7 @@ ggplot(long_df_merged,aes(x=cond,y=aft_PM_minus_after_ind, fill = cond,
   theme_classic()+
   
   theme(legend.position = "none")+
-  params+
+ # params+
   ylab("Valence change after PM - after the induction")+
   xlab("")
 )
@@ -171,7 +171,7 @@ ggplot(long_df_merged,aes(x=cond,y=valence_baseline, fill = cond,
   theme_classic()+
   
   theme(legend.position = "none")+
-  params+
+  #params+
   ylab("Valence baseline")+
   xlab("")
 )
@@ -233,7 +233,7 @@ ggplot(long_df_valence_split,aes(x=cond,y=valence_value, fill = cond,
   theme_classic()+
   
   theme(legend.position = "none")+
-  params+
+  #params+
   ylab("Valence")+
-  xlab("")+params
+  xlab("")
 )

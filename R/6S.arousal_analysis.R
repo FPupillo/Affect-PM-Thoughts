@@ -52,7 +52,7 @@ print(
     theme_classic()+
     
     theme(legend.position = "none")+
-    params+
+    #params+
     ylab("Arousal change after induction")+
     xlab("")
 )
@@ -97,7 +97,7 @@ print(
     theme_classic()+
     
     theme(legend.position = "none")+
-    params+
+    #params+
     ylab("Arousal change after induction")+
     xlab("")
 )
@@ -184,7 +184,7 @@ print(
     theme_classic()+
     
     theme(legend.position = "none")+
-    params+
+    #params+
     ylab("arousal change after induction")+
     xlab("")
 )
@@ -202,7 +202,7 @@ print(
     theme_classic()+
     
     theme(legend.position = "none")+
-    params+
+    #params+
     ylab("Arousal change after PM - after the induction")+
     xlab("")
 )
@@ -221,7 +221,7 @@ print(
     theme_classic()+
     
     theme(legend.position = "none")+
-    params+
+    #params+
     ylab("Arousal baseline")+
     xlab("")
 )
@@ -283,7 +283,7 @@ print(
     theme_classic()+
     
     theme(legend.position = "none")+
-    params+
+    #params+
     ylab("Arousal")+
     xlab("")+params
 )
@@ -351,11 +351,32 @@ print(
     scale_fill_manual(values = okabe_ito,
                       labels = c(YA = "YA", OA = "OA")) +  # CI ribbons
     
-    theme_classic()+params+
+    theme_classic()+
     facet_wrap(
       ~ arousal_measure,
       labeller = lab_valence
     )
 )
 
-ggsave("Write_up/figures/arousal_all_contrasts.png", width = 12, height = 6, dpi = 300)
+plot_arousal<-
+  emmip(mod_arousal, agegroup ~ cond | arousal_measure, CIs = TRUE) +
+    theme_minimal() + labs(y = "Estimated arousal", x = "Condition", color = "Age group")+
+    # scale_color_manual(values = c(YA = "darkorange", OA = "darkgreen")) +
+    scale_color_manual(values = okabe_ito,
+                       labels = c(YA = "YA", OA = "OA")) +
+    geom_hline(aes(yintercept = 0), color = "black")  +
+    
+    #scale_fill_manual(values = c(YA = "darkorange", OA = "darkgreen")) +  # CI ribbons
+    scale_fill_manual(values = okabe_ito,
+                      labels = c(YA = "YA", OA = "OA")) +  # CI ribbons
+    
+    theme_classic()+params+
+    facet_wrap(
+      ~ arousal_measure,
+      labeller = lab_valence
+    )
+
+
+
+
+ggsave( "Write_up/figures/arousal_all_contrasts.png", plot_arousal, width = 12, height = 6, dpi = 300)

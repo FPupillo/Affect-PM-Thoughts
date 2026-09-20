@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -13,10 +13,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -74,10 +77,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ece42c8223ec2bf36298a08f122c9a68.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-ba8f7c244c1f50cbf6c6a3aa3874339a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -128,6 +131,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#valence-analyses" id="toc-valence-analyses" class="nav-link" data-scroll-target="#valence-analyses">Valence analyses</a></li>
   <li><a href="#additional-arousal-analysis" id="toc-additional-arousal-analysis" class="nav-link" data-scroll-target="#additional-arousal-analysis">additional arousal analysis</a></li>
   <li><a href="#pm-analysis" id="toc-pm-analysis" class="nav-link" data-scroll-target="#pm-analysis">PM analysis</a></li>
+  <li><a href="#spline-analysis" id="toc-spline-analysis" class="nav-link" data-scroll-target="#spline-analysis">Spline analysis</a></li>
+  <li><a href="#supplementary-analyses" id="toc-supplementary-analyses" class="nav-link" data-scroll-target="#supplementary-analyses">Supplementary analyses</a></li>
   <li><a href="#intrusive-thoughts" id="toc-intrusive-thoughts" class="nav-link" data-scroll-target="#intrusive-thoughts">Intrusive thoughts</a></li>
   <li><a href="#associational-variable-analyses" id="toc-associational-variable-analyses" class="nav-link" data-scroll-target="#associational-variable-analyses">Associational variable analyses</a></li>
   <li><a href="#create-a-correlation-table-with-all-the-variables" id="toc-create-a-correlation-table-with-all-the-variables" class="nav-link" data-scroll-target="#create-a-correlation-table-with-all-the-variables">Create a correlation table with all the variables</a></li>
@@ -263,22 +268,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="co"># get the spss file</span></span>
-<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>spss_data<span class="ot">&lt;-</span><span class="fu">read.csv</span>(<span class="st">"PM final data.csv"</span>  )</span>
-<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------------------------------#</span></span>
-<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------------------------------#</span></span>
-<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a><span class="co"># create age variable</span></span>
-<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>df_wide<span class="sc">$</span>agegroup<span class="ot">&lt;-</span><span class="fu">ifelse</span>(df_wide<span class="sc">$</span>agegroup<span class="sc">==</span><span class="dv">1</span>, <span class="st">"YA"</span>, <span class="st">"OA"</span>)</span>
-<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a><span class="co">#df_long$agegroup&lt;-ifelse(df_long$agegroup==1, "YA", "OA")</span></span>
-<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>spss_data<span class="sc">$</span>AgeGroup<span class="ot">&lt;-</span><span class="fu">ifelse</span>(spss_data<span class="sc">$</span>AgeGroup<span class="sc">==</span><span class="dv">1</span>, <span class="st">"YA"</span>, <span class="st">"OA"</span>)</span>
-<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>single_part<span class="ot">&lt;-</span> df_wide <span class="sc">%&gt;%</span></span>
-<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(participant) <span class="sc">%&gt;%</span></span>
-<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span>)</span>
-<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Total number of participants is"</span>, <span class="fu">nrow</span>(single_part)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a><span class="co"># get the spss file</span></span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>spss_data<span class="ot">&lt;-</span><span class="fu">read.csv</span>(<span class="st">"PM final data.csv"</span>  )</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------------------------------#</span></span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------------------------------#</span></span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a><span class="co"># create age variable</span></span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>df_wide<span class="sc">$</span>agegroup<span class="ot">&lt;-</span><span class="fu">ifelse</span>(df_wide<span class="sc">$</span>agegroup<span class="sc">==</span><span class="dv">1</span>, <span class="st">"YA"</span>, <span class="st">"OA"</span>)</span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a><span class="co">#df_long$agegroup&lt;-ifelse(df_long$agegroup==1, "YA", "OA")</span></span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>spss_data<span class="sc">$</span>AgeGroup<span class="ot">&lt;-</span><span class="fu">ifelse</span>(spss_data<span class="sc">$</span>AgeGroup<span class="sc">==</span><span class="dv">1</span>, <span class="st">"YA"</span>, <span class="st">"OA"</span>)</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>single_part<span class="ot">&lt;-</span> df_wide <span class="sc">%&gt;%</span></span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(participant) <span class="sc">%&gt;%</span></span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span>)</span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Total number of participants is"</span>, <span class="fu">nrow</span>(single_part)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Total number of participants is 125"</code></pre>
@@ -733,7 +737,354 @@ X-squared = 3.1684, df = 1, p-value = 0.07508</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/6.valence_analysis.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Group data by Condition, calculate mean and SD</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>summary_table_valence <span class="ot">&lt;-</span>   long_df_valence_split <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(valence_measure, cond, agegroup) <span class="sc">%&gt;%</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean =</span> <span class="fu">mean</span>(valence_value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">SD =</span> <span class="fu">sd</span>(valence_value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">'drop'</span>  <span class="co"># To avoid message about grouping</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>summary_table_valence</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 5
+   valence_measure cond     agegroup   Mean    SD
+   &lt;fct&gt;           &lt;chr&gt;    &lt;fct&gt;     &lt;dbl&gt; &lt;dbl&gt;
+ 1 post_induction  Negative YA       -0.948 0.887
+ 2 post_induction  Negative OA       -0.542 1.17 
+ 3 post_induction  Neutral  YA        0.422 0.706
+ 4 post_induction  Neutral  OA        0.132 0.629
+ 5 post_induction  Positive YA        0.684 0.724
+ 6 post_induction  Positive OA        0.237 0.731
+ 7 post_task       Negative YA        0.540 0.780
+ 8 post_task       Negative OA        0.571 1.11 
+ 9 post_task       Neutral  YA       -0.256 0.872
+10 post_task       Neutral  OA       -0.169 1.10 
+11 post_task       Positive YA       -0.377 0.793
+12 post_task       Positive OA       -0.300 0.866</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># analyze valence</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>long_df_valence_split<span class="sc">$</span>agegroup.c<span class="ot">&lt;-</span><span class="fu">ifelse</span>(long_df_valence_split<span class="sc">$</span>agegroup<span class="sc">==</span><span class="st">"YA"</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>mod_valence<span class="ot">&lt;-</span><span class="fu">lmer</span>(valence_value<span class="sc">~</span>agegroup<span class="sc">*</span>valence_measure<span class="sc">*</span>cond <span class="sc">+</span>(<span class="dv">1</span><span class="sc">|</span>participant), </span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> long_df_valence_split)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_valence)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
+lmerModLmerTest]
+Formula: valence_value ~ agegroup * valence_measure * cond + (1 | participant)
+   Data: long_df_valence_split
+
+REML criterion at convergence: 1855.8
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-5.7432 -0.5167  0.1041  0.5645  3.6053 
+
+Random effects:
+ Groups      Name        Variance Std.Dev.
+ participant (Intercept) 0.0000   0.0000  
+ Residual                0.7678   0.8763  
+Number of obs: 714, groups:  participant, 120
+
+Fixed effects:
+                                                 Estimate Std. Error       df
+(Intercept)                                       -0.9476     0.1113 702.0000
+agegroupOA                                         0.4060     0.1608 702.0000
+valence_measurepost_task                           1.4880     0.1574 702.0000
+condNeutral                                        1.3698     0.1574 702.0000
+condPositive                                       1.6318     0.1574 702.0000
+agegroupOA:valence_measurepost_task               -0.3758     0.2274 702.0000
+agegroupOA:condNeutral                            -0.6957     0.2274 702.0000
+agegroupOA:condPositive                           -0.8536     0.2274 702.0000
+valence_measurepost_task:condNeutral              -2.1663     0.2226 702.0000
+valence_measurepost_task:condPositive             -2.5491     0.2226 702.0000
+agegroupOA:valence_measurepost_task:condNeutral    0.7525     0.3216 702.0000
+agegroupOA:valence_measurepost_task:condPositive   0.8999     0.3216 702.0000
+                                                 t value Pr(&gt;|t|)    
+(Intercept)                                       -8.515  &lt; 2e-16 ***
+agegroupOA                                         2.525 0.011794 *  
+valence_measurepost_task                           9.455  &lt; 2e-16 ***
+condNeutral                                        8.704  &lt; 2e-16 ***
+condPositive                                      10.369  &lt; 2e-16 ***
+agegroupOA:valence_measurepost_task               -1.653 0.098838 .  
+agegroupOA:condNeutral                            -3.059 0.002303 ** 
+agegroupOA:condPositive                           -3.754 0.000189 ***
+valence_measurepost_task:condNeutral              -9.733  &lt; 2e-16 ***
+valence_measurepost_task:condPositive            -11.453  &lt; 2e-16 ***
+agegroupOA:valence_measurepost_task:condNeutral    2.340 0.019561 *  
+agegroupOA:valence_measurepost_task:condPositive   2.798 0.005278 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+            (Intr) aggrOA vlnc__ cndNtr cndPst agOA:__ agOA:N agOA:P vl__:N
+agegroupOA  -0.692                                                         
+vlnc_msrps_ -0.707  0.489                                                  
+condNeutral -0.707  0.489  0.500                                           
+condPositiv -0.707  0.489  0.500  0.500                                    
+aggrpOA:v__  0.489 -0.707 -0.692 -0.346 -0.346                             
+aggrpOA:cnN  0.489 -0.707 -0.346 -0.692 -0.346  0.500                      
+aggrpOA:cnP  0.489 -0.707 -0.346 -0.346 -0.692  0.500   0.500              
+vlnc_msr_:N  0.500 -0.346 -0.707 -0.707 -0.354  0.489   0.489  0.245       
+vlnc_msr_:P  0.500 -0.346 -0.707 -0.354 -0.707  0.489   0.245  0.489  0.500
+aggrOA:__:N -0.346  0.500  0.489  0.489  0.245 -0.707  -0.707 -0.354 -0.692
+aggrOA:__:P -0.346  0.500  0.489  0.245  0.489 -0.707  -0.354 -0.707 -0.346
+            vl__:P aOA:__:N
+agegroupOA                 
+vlnc_msrps_                
+condNeutral                
+condPositiv                
+aggrpOA:v__                
+aggrpOA:cnN                
+aggrpOA:cnP                
+vlnc_msr_:N                
+vlnc_msr_:P                
+aggrOA:__:N -0.346         
+aggrOA:__:P -0.692  0.500  
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see help('isSingular')</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tab_model</span>(mod_valence)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table style="border-collapse:collapse; border:none;">
+<tbody><tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">&nbsp;</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">valence_value</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">Predictors</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">Estimates</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">CI</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">p</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(Intercept)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.95</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-1.17&nbsp;–&nbsp;-0.73</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">agegroup [OA]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.41</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.09&nbsp;–&nbsp;0.72</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.012</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">valence measure<br>[post_task]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.49</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.18&nbsp;–&nbsp;1.80</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">cond [Neutral]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.37</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.06&nbsp;–&nbsp;1.68</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">cond [Positive]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.63</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.32&nbsp;–&nbsp;1.94</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">agegroup [OA] × valence<br>measure [post_task]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.38</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.82&nbsp;–&nbsp;0.07</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.099</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">agegroup [OA] × cond<br>[Neutral]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.70</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-1.14&nbsp;–&nbsp;-0.25</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.002</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">agegroup [OA] × cond<br>[Positive]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.85</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-1.30&nbsp;–&nbsp;-0.41</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">valence measure<br>[post_task] × cond<br>[Neutral]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-2.17</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-2.60&nbsp;–&nbsp;-1.73</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">valence measure<br>[post_task] × cond<br>[Positive]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-2.55</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-2.99&nbsp;–&nbsp;-2.11</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(agegroup [OA] × valence<br>measure [post_task]) ×<br>cond [Neutral]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.75</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.12&nbsp;–&nbsp;1.38</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.020</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(agegroup [OA] × valence<br>measure [post_task]) ×<br>cond [Positive]</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.90</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.27&nbsp;–&nbsp;1.53</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.005</strong></td>
+</tr>
+<tr>
+<td colspan="4" style="font-weight:bold; text-align:left; padding-top:.8em;">Random Effects</td>
+</tr>
+
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">σ<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.77</td>
+</tr>
+
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">τ<sub>00</sub> <sub>participant</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.00</td>
+
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">N <sub>participant</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">120</td>
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">Observations</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">714</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">Marginal R<sup>2</sup> / Conditional R<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.240 / NA</td>
+</tr>
+
+</tbody></table>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(mod_valence )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Type III Analysis of Variance Table with Satterthwaite's method
+                               Sum Sq Mean Sq NumDF DenDF F value  Pr(&gt;F)    
+agegroup                        0.094   0.094     1   702  0.1223 0.72665    
+valence_measure                 0.002   0.002     1   702  0.0031 0.95535    
+cond                            3.253   1.627     2   702  2.1183 0.12100    
+agegroup:valence_measure        1.364   1.364     1   702  1.7765 0.18301    
+agegroup:cond                   5.387   2.693     2   702  3.5078 0.03049 *  
+valence_measure:cond          152.572  76.286     2   702 99.3508 &lt; 2e-16 ***
+agegroup:valence_measure:cond   6.919   3.459     2   702  4.5054 0.01137 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eta_squared</span>(mod_valence, <span class="at">partial=</span>T,<span class="at">alternative =</span> <span class="st">"two.sided"</span> )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># Effect Size for ANOVA (Type III)
+
+Parameter                     | Eta2 (partial) |       95% CI
+-------------------------------------------------------------
+agegroup                      |       1.74e-04 | [0.00, 0.01]
+valence_measure               |       4.47e-06 | [0.00, 0.00]
+cond                          |       6.00e-03 | [0.00, 0.02]
+agegroup:valence_measure      |       2.52e-03 | [0.00, 0.02]
+agegroup:cond                 |       9.89e-03 | [0.00, 0.03]
+valence_measure:cond          |           0.22 | [0.17, 0.27]
+agegroup:valence_measure:cond |           0.01 | [0.00, 0.03]</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>emm_mean<span class="ot">&lt;-</span><span class="fu">emmeans</span>(mod_valence, <span class="sc">~</span> valence_measure<span class="sc">*</span>agegroup <span class="sc">|</span> cond )</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) Omnibus tests within each valence_measure (does cond matter? any agxcond interaction?)</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="fu">joint_tests</span>(emm_mean, <span class="at">by =</span> <span class="st">"valence_measure"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>valence_measure = post_induction:
+ model term    df1    df2 F.ratio p.value
+ agegroup        1 391.33   1.416  0.2349
+ cond            2 586.34  65.230  &lt;.0001
+ agegroup:cond   2 586.34   7.978  0.0004
+
+valence_measure = post_task:
+ model term    df1    df2 F.ratio p.value
+ agegroup        1 391.33   0.483  0.4874
+ cond            2 586.34  36.235  &lt;.0001
+ agegroup:cond   2 586.34   0.035  0.9653</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) Pairwise contrasts of cond within each agegroup and measure (your main request)</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(emm_mean,</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">by     =</span> <span class="fu">c</span>( <span class="st">"cond"</span>, <span class="st">"valence_measure"</span>),</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">adjust =</span> <span class="st">"bonferroni"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>cond = Negative, valence_measure = post_induction:
+ contrast estimate    SE  df t.ratio p.value
+ YA - OA   -0.4060 0.161 702  -2.525  0.0118
+
+cond = Neutral, valence_measure = post_induction:
+ contrast estimate    SE  df t.ratio p.value
+ YA - OA    0.2897 0.161 702   1.802  0.0720
+
+cond = Positive, valence_measure = post_induction:
+ contrast estimate    SE  df t.ratio p.value
+ YA - OA    0.4477 0.161 702   2.784  0.0055
+
+cond = Negative, valence_measure = post_task:
+ contrast estimate    SE  df t.ratio p.value
+ YA - OA   -0.0302 0.161 702  -0.188  0.8513
+
+cond = Neutral, valence_measure = post_task:
+ contrast estimate    SE  df t.ratio p.value
+ YA - OA   -0.0870 0.161 702  -0.541  0.5885
+
+cond = Positive, valence_measure = post_task:
+ contrast estimate    SE  df t.ratio p.value
+ YA - OA   -0.0764 0.161 702  -0.475  0.6347
+
+Degrees-of-freedom method: kenward-roger </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now break down the valence by condition interaction</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>emm_mean2<span class="ot">&lt;-</span><span class="fu">emmeans</span>(mod_valence, <span class="sc">~</span> cond <span class="sc">|</span> valence_measure )</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(emm_mean2,</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">adjust =</span> <span class="st">"bonferroni"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>valence_measure = post_induction:
+ contrast            estimate    SE  df t.ratio p.value
+ Negative - Neutral    -1.022 0.114 586  -8.988  &lt;.0001
+ Negative - Positive   -1.205 0.114 586 -10.598  &lt;.0001
+ Neutral - Positive    -0.183 0.114 585  -1.610  0.3238
+
+valence_measure = post_task:
+ contrast            estimate    SE  df t.ratio p.value
+ Negative - Neutral     0.768 0.114 586   6.755  &lt;.0001
+ Negative - Positive    0.894 0.114 586   7.864  &lt;.0001
+ Neutral - Positive     0.126 0.114 585   1.109  0.8042
+
+Results are averaged over the levels of: agegroup 
+Degrees-of-freedom method: kenward-roger 
+P value adjustment: bonferroni method for 3 tests </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(emm_mean2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>valence_measure = post_induction:
@@ -752,6 +1103,27 @@ Results are averaged over the levels of: agegroup
 Degrees-of-freedom method: kenward-roger 
 Confidence level used: 0.95 </code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">emmip</span>(mod_valence, agegroup <span class="sc">~</span> cond <span class="sc">|</span> valence_measure, <span class="at">CIs =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Estimated valence"</span>, <span class="at">x =</span> <span class="st">"Condition"</span>, <span class="at">color =</span> <span class="st">"Age group"</span>)<span class="sc">+</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># scale_color_manual(values = c(YA = "darkorange", OA = "darkgreen")) +</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> okabe_ito,</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">labels =</span> <span class="fu">c</span>(<span class="at">YA =</span> <span class="st">"YA"</span>, <span class="at">OA =</span> <span class="st">"OA"</span>)) <span class="sc">+</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept =</span> <span class="dv">0</span>), <span class="at">color =</span> <span class="st">"black"</span>)  <span class="sc">+</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">#scale_fill_manual(values = c(YA = "darkorange", OA = "darkgreen")) +  # CI ribbons</span></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> okabe_ito,</span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="at">YA =</span> <span class="st">"YA"</span>, <span class="at">OA =</span> <span class="st">"OA"</span>)) <span class="sc">+</span>  <span class="co"># CI ribbons</span></span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()<span class="sc">+</span>params<span class="sc">+</span></span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(</span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> valence_measure,</span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">labeller =</span> lab_valence</span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -759,6 +1131,36 @@ Confidence level used: 0.95 </code></pre>
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmip</span>(mod_valence, agegroup <span class="sc">~</span> cond <span class="sc">|</span> valence_measure, <span class="at">CIs =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Estimated valence"</span>, <span class="at">x =</span> <span class="st">"Condition"</span>, <span class="at">color =</span> <span class="st">"Age group"</span>)<span class="sc">+</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># scale_color_manual(values = c(YA = "darkorange", OA = "darkgreen")) +</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> okabe_ito,</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">labels =</span> <span class="fu">c</span>(<span class="at">YA =</span> <span class="st">"YA"</span>, <span class="at">OA =</span> <span class="st">"OA"</span>)) <span class="sc">+</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept =</span> <span class="dv">0</span>), <span class="at">color =</span> <span class="st">"black"</span>)  <span class="sc">+</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">#scale_fill_manual(values = c(YA = "darkorange", OA = "darkgreen")) +  # CI ribbons</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> okabe_ito,</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="at">YA =</span> <span class="st">"YA"</span>, <span class="at">OA =</span> <span class="st">"OA"</span>)) <span class="sc">+</span>  <span class="co"># CI ribbons</span></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()<span class="sc">+</span></span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(</span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> valence_measure,</span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">labeller =</span> lab_valence</span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Analyses_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/6.valence_analysis.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 </section>
 <section id="additional-arousal-analysis" class="level2">
@@ -766,7 +1168,7 @@ Confidence level used: 0.95 </code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/6S.arousal_analysis.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/6S.arousal_analysis.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -865,10 +1267,9 @@ Confidence level used: 0.95 </code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"helper_functions/logit_transform.R"</span>)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/7.PM_main_analysis.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"helper_functions/logit_transform.R"</span>)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/7.PM_main_analysis.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -877,6 +1278,430 @@ Confidence level used: 0.95 </code></pre>
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># regression with all the control variables</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>reg.s<span class="ot">&lt;-</span><span class="fu">lmer</span>(PM_task_lenient_av_log<span class="sc">~</span>order_c<span class="sc">*</span>agegroup.c<span class="sc">+</span>DS.c<span class="sc">+</span>Mill_Hill.c<span class="sc">+</span>aft_PM_minus_after_ind.s<span class="sc">*</span>agegroup.c <span class="sc">+</span> </span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>              valence_aftIND_min_bef.s<span class="sc">*</span>agegroup.c<span class="sc">+</span>(<span class="dv">1</span><span class="sc">+</span>order_c<span class="sc">|</span>participant), </span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> long_df_merged[ (<span class="fu">is.na</span>(long_df_merged<span class="sc">$</span>MOCA)<span class="sc">|</span>long_df_merged<span class="sc">$</span>MOCA<span class="sc">&gt;=</span><span class="dv">26</span>),])</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg.s)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
+lmerModLmerTest]
+Formula: PM_task_lenient_av_log ~ order_c * agegroup.c + DS.c + Mill_Hill.c +  
+    aft_PM_minus_after_ind.s * agegroup.c + valence_aftIND_min_bef.s *  
+    agegroup.c + (1 + order_c | participant)
+   Data: long_df_merged[(is.na(long_df_merged$MOCA) | long_df_merged$MOCA &gt;=  
+    26), ]
+
+REML criterion at convergence: 970.4
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-2.4022 -0.4566  0.1389  0.5587  2.0688 
+
+Random effects:
+ Groups      Name        Variance Std.Dev. Corr 
+ participant (Intercept) 0.3284   0.5730        
+             order_c     0.1214   0.3484   -0.11
+ Residual                0.5908   0.7686        
+Number of obs: 345, groups:  participant, 115
+
+Fixed effects:
+                                     Estimate Std. Error        df t value
+(Intercept)                           0.53699    0.06811 109.64465   7.884
+order_c                               0.22753    0.06088 110.37040   3.737
+agegroup.c                           -0.50977    0.22119 109.77985  -2.305
+DS.c                                  0.18993    0.07179 109.72613   2.646
+Mill_Hill.c                           0.19492    0.10646 109.73738   1.831
+aft_PM_minus_after_ind.s              0.19850    0.06782 323.92102   2.927
+valence_aftIND_min_bef.s              0.18902    0.06558 306.88928   2.882
+order_c:agegroup.c                    0.18644    0.12176 110.37028   1.531
+agegroup.c:aft_PM_minus_after_ind.s  -0.09070    0.13563 323.99839  -0.669
+agegroup.c:valence_aftIND_min_bef.s   0.03418    0.13116 306.97986   0.261
+                                    Pr(&gt;|t|)    
+(Intercept)                         2.52e-12 ***
+order_c                             0.000296 ***
+agegroup.c                          0.023069 *  
+DS.c                                0.009346 ** 
+Mill_Hill.c                         0.069822 .  
+aft_PM_minus_after_ind.s            0.003667 ** 
+valence_aftIND_min_bef.s            0.004228 ** 
+order_c:agegroup.c                  0.128572    
+agegroup.c:aft_PM_minus_after_ind.s 0.504146    
+agegroup.c:valence_aftIND_min_bef.s 0.794569    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+            (Intr) ordr_c aggrp. DS.c   Mll_H. a_PM__ v_IND_ ord_:. a.:_PM
+order_c     -0.046                                                        
+agegroup.c   0.118 -0.005                                                 
+DS.c         0.006  0.001  0.239                                          
+Mill_Hill.c -0.092  0.003 -0.760 -0.029                                   
+aft_PM_m__.  0.006 -0.098  0.014 -0.008 -0.019                            
+vlnc_IND__. -0.001 -0.072  0.019  0.015 -0.005  0.652                     
+ordr_c:ggr. -0.005  0.091 -0.030  0.001  0.003 -0.057 -0.030              
+ag.:_PM___.  0.002 -0.057  0.013  0.002 -0.013 -0.184 -0.011 -0.098       
+ag.:_IND__.  0.019 -0.030  0.003  0.011 -0.003 -0.011  0.202 -0.072  0.653</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tab_model</span>(reg.s, <span class="at">file =</span> <span class="st">"main_regression_table.html"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table style="border-collapse:collapse; border:none;">
+<tbody><tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">&nbsp;</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">PM_task_lenient_av_log</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">Predictors</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">Estimates</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">CI</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">p</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(Intercept)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.54</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.40&nbsp;–&nbsp;0.67</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">order c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.23</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.11&nbsp;–&nbsp;0.35</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">agegroup c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.51</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.94&nbsp;–&nbsp;-0.07</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.022</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">DS c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.19</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.05&nbsp;–&nbsp;0.33</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.009</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">Mill Hill c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.19</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.01&nbsp;–&nbsp;0.40</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.068</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">aft PM minus after ind s</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.20</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.07&nbsp;–&nbsp;0.33</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.004</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">valence aftIND min bef s</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.19</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.06&nbsp;–&nbsp;0.32</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.004</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">order c × agegroup c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.19</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.05&nbsp;–&nbsp;0.43</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.127</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">agegroup c × aft PM minus<br>after ind s</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.09</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.36&nbsp;–&nbsp;0.18</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.504</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">agegroup c × valence<br>aftIND min bef s</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.03</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.22&nbsp;–&nbsp;0.29</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.795</td>
+</tr>
+<tr>
+<td colspan="4" style="font-weight:bold; text-align:left; padding-top:.8em;">Random Effects</td>
+</tr>
+
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">σ<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.59</td>
+</tr>
+
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">τ<sub>00</sub> <sub>participant</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.33</td>
+
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">τ<sub>11</sub> <sub>participant.order_c</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.12</td>
+
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">ρ<sub>01</sub> <sub>participant</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">-0.11</td>
+
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">ICC</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.41</td>
+
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">N <sub>participant</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">115</td>
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">Observations</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">345</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">Marginal R<sup>2</sup> / Conditional R<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.130 / 0.486</td>
+</tr>
+
+</tbody></table>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(reg.s)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Type III Analysis of Variance Table with Satterthwaite's method
+                                    Sum Sq Mean Sq NumDF  DenDF F value
+order_c                             8.2521  8.2521     1 110.37 13.9683
+agegroup.c                          3.1378  3.1378     1 109.78  5.3113
+DS.c                                4.1357  4.1357     1 109.73  7.0005
+Mill_Hill.c                         1.9805  1.9805     1 109.74  3.3524
+aft_PM_minus_after_ind.s            5.0606  5.0606     1 323.92  8.5660
+valence_aftIND_min_bef.s            4.9074  4.9074     1 306.89  8.3068
+order_c:agegroup.c                  1.3852  1.3852     1 110.37  2.3447
+agegroup.c:aft_PM_minus_after_ind.s 0.2642  0.2642     1 324.00  0.4472
+agegroup.c:valence_aftIND_min_bef.s 0.0401  0.0401     1 306.98  0.0679
+                                       Pr(&gt;F)    
+order_c                             0.0002963 ***
+agegroup.c                          0.0230688 *  
+DS.c                                0.0093457 ** 
+Mill_Hill.c                         0.0698218 .  
+aft_PM_minus_after_ind.s            0.0036672 ** 
+valence_aftIND_min_bef.s            0.0042284 ** 
+order_c:agegroup.c                  0.1285718    
+agegroup.c:aft_PM_minus_after_ind.s 0.5041457    
+agegroup.c:valence_aftIND_min_bef.s 0.7945689    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(reg.s)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            order_c                          agegroup.c 
+                           1.022720                            2.667127 
+                               DS.c                         Mill_Hill.c 
+                           1.126734                            2.515479 
+           aft_PM_minus_after_ind.s            valence_aftIND_min_bef.s 
+                           1.870463                            1.895205 
+                 order_c:agegroup.c agegroup.c:aft_PM_minus_after_ind.s 
+                           1.024908                            1.869399 
+agegroup.c:valence_aftIND_min_bef.s 
+                           1.893898 </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eta_squared</span>(reg.s, <span class="at">partial =</span> T, <span class="at">alternative =</span> <span class="st">"two.sided"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># Effect Size for ANOVA (Type III)
+
+Parameter                           | Eta2 (partial) |       95% CI
+-------------------------------------------------------------------
+order_c                             |           0.11 | [0.03, 0.23]
+agegroup.c                          |           0.05 | [0.00, 0.14]
+DS.c                                |           0.06 | [0.00, 0.16]
+Mill_Hill.c                         |           0.03 | [0.00, 0.12]
+aft_PM_minus_after_ind.s            |           0.03 | [0.00, 0.07]
+valence_aftIND_min_bef.s            |           0.03 | [0.00, 0.07]
+order_c:agegroup.c                  |           0.02 | [0.00, 0.10]
+agegroup.c:aft_PM_minus_after_ind.s |       1.38e-03 | [0.00, 0.02]
+agegroup.c:valence_aftIND_min_bef.s |       2.21e-04 | [0.00, 0.01]</code></pre>
+</div>
+</div>
+</section>
+<section id="spline-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="spline-analysis">Spline analysis</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------------------------------#</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Spline analysis</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="co"># now we want to know whether it is positive or negative side that drives the effect</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>long_df_merged<span class="sc">$</span>post_ind_pos_spline<span class="ot">&lt;-</span></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(long_df_merged<span class="sc">$</span>valence_aftIND_min_bef<span class="sc">&gt;</span><span class="dv">0</span>,</span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>         long_df_merged<span class="sc">$</span>valence_aftIND_min_bef, <span class="dv">0</span> )</span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>long_df_merged<span class="sc">$</span>post_ind_neg_spline<span class="ot">&lt;-</span> </span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(long_df_merged<span class="sc">$</span>valence_aftIND_min_bef<span class="sc">&lt;</span><span class="dv">0</span>,</span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>         long_df_merged<span class="sc">$</span>valence_aftIND_min_bef, <span class="dv">0</span> )</span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a>long_df_merged<span class="sc">$</span>post_PM_pos_spline<span class="ot">&lt;-</span> </span>
+<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(long_df_merged<span class="sc">$</span>aft_PM_minus_after_ind<span class="sc">&gt;</span><span class="dv">0</span>,</span>
+<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a>         long_df_merged<span class="sc">$</span>aft_PM_minus_after_ind, <span class="dv">0</span> )</span>
+<span id="cb57-16"><a href="#cb57-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-17"><a href="#cb57-17" aria-hidden="true" tabindex="-1"></a>long_df_merged<span class="sc">$</span>post_PM_neg_spline<span class="ot">&lt;-</span> </span>
+<span id="cb57-18"><a href="#cb57-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(long_df_merged<span class="sc">$</span>aft_PM_minus_after_ind<span class="sc">&lt;</span><span class="dv">0</span>,</span>
+<span id="cb57-19"><a href="#cb57-19" aria-hidden="true" tabindex="-1"></a>         long_df_merged<span class="sc">$</span>aft_PM_minus_after_ind, <span class="dv">0</span> )</span>
+<span id="cb57-20"><a href="#cb57-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-21"><a href="#cb57-21" aria-hidden="true" tabindex="-1"></a><span class="co"># scale the predictors</span></span>
+<span id="cb57-22"><a href="#cb57-22" aria-hidden="true" tabindex="-1"></a>long_df_merged<span class="sc">$</span>post_ind_pos_spline.s<span class="ot">&lt;-</span><span class="fu">scale</span>(long_df_merged<span class="sc">$</span>post_ind_pos_spline)</span>
+<span id="cb57-23"><a href="#cb57-23" aria-hidden="true" tabindex="-1"></a>long_df_merged<span class="sc">$</span>post_ind_neg_spline.s<span class="ot">&lt;-</span><span class="fu">scale</span>(long_df_merged<span class="sc">$</span>post_ind_neg_spline)</span>
+<span id="cb57-24"><a href="#cb57-24" aria-hidden="true" tabindex="-1"></a>long_df_merged<span class="sc">$</span>post_PM_pos_spline.s<span class="ot">&lt;-</span><span class="fu">scale</span>(long_df_merged<span class="sc">$</span>post_PM_pos_spline)</span>
+<span id="cb57-25"><a href="#cb57-25" aria-hidden="true" tabindex="-1"></a>long_df_merged<span class="sc">$</span>post_PM_neg_spline.s<span class="ot">&lt;-</span><span class="fu">scale</span>(long_df_merged<span class="sc">$</span>post_PM_neg_spline)</span>
+<span id="cb57-26"><a href="#cb57-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-27"><a href="#cb57-27" aria-hidden="true" tabindex="-1"></a>mod_splines<span class="ot">&lt;-</span><span class="fu">lmer</span>(PM_task_lenient_av_log<span class="sc">~</span></span>
+<span id="cb57-28"><a href="#cb57-28" aria-hidden="true" tabindex="-1"></a>                    agegroup.c<span class="sc">*</span>order_c<span class="sc">+</span>DS.c<span class="sc">+</span>Mill_Hill.c<span class="sc">+</span></span>
+<span id="cb57-29"><a href="#cb57-29" aria-hidden="true" tabindex="-1"></a>                    post_ind_pos_spline<span class="sc">+</span>post_ind_neg_spline<span class="sc">+</span></span>
+<span id="cb57-30"><a href="#cb57-30" aria-hidden="true" tabindex="-1"></a>                    <span class="sc">+</span> agegroup.c<span class="sc">+</span></span>
+<span id="cb57-31"><a href="#cb57-31" aria-hidden="true" tabindex="-1"></a>                    post_PM_pos_spline<span class="sc">+</span>post_PM_neg_spline<span class="sc">+</span></span>
+<span id="cb57-32"><a href="#cb57-32" aria-hidden="true" tabindex="-1"></a>                    (<span class="dv">1</span><span class="sc">|</span>participant), </span>
+<span id="cb57-33"><a href="#cb57-33" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> long_df_merged[ (<span class="fu">is.na</span>(long_df_merged<span class="sc">$</span>MOCA)<span class="sc">|</span></span>
+<span id="cb57-34"><a href="#cb57-34" aria-hidden="true" tabindex="-1"></a>                                            long_df_merged<span class="sc">$</span>MOCA<span class="sc">&gt;=</span><span class="dv">26</span>) ,],</span>
+<span id="cb57-35"><a href="#cb57-35" aria-hidden="true" tabindex="-1"></a>                  <span class="at">control =</span>  <span class="fu">lmerControl</span>(<span class="at">optimizer =</span> <span class="st">"bobyqa"</span>,</span>
+<span id="cb57-36"><a href="#cb57-36" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">optCtrl =</span> <span class="fu">list</span>(<span class="at">maxfun =</span> <span class="dv">100000</span>)))</span>
+<span id="cb57-37"><a href="#cb57-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-38"><a href="#cb57-38" aria-hidden="true" tabindex="-1"></a><span class="fu">tab_model</span>(mod_splines)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table style="border-collapse:collapse; border:none;">
+<tbody><tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">&nbsp;</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">PM_task_lenient_av_log</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">Predictors</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">Estimates</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">CI</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">p</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(Intercept)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.58</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.41&nbsp;–&nbsp;0.76</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">agegroup c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.54</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.98&nbsp;–&nbsp;-0.10</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.017</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">order c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.23</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.12&nbsp;–&nbsp;0.34</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">DS c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.19</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.05&nbsp;–&nbsp;0.34</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.008</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">Mill Hill c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.20</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.01&nbsp;–&nbsp;0.41</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.063</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">post ind pos spline</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.00</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.01&nbsp;–&nbsp;0.02</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.712</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">post ind neg spline</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.02</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.00&nbsp;–&nbsp;0.03</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.010</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">post PM pos spline</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.02</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.00&nbsp;–&nbsp;0.04</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.021</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">post PM neg spline</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.01</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.01&nbsp;–&nbsp;0.02</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.301</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">agegroup c × order c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.18</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.04&nbsp;–&nbsp;0.40</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.108</td>
+</tr>
+<tr>
+<td colspan="4" style="font-weight:bold; text-align:left; padding-top:.8em;">Random Effects</td>
+</tr>
+
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">σ<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.71</td>
+</tr>
+
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">τ<sub>00</sub> <sub>participant</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.29</td>
+
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">ICC</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.29</td>
+
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">N <sub>participant</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">115</td>
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">Observations</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">345</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">Marginal R<sup>2</sup> / Conditional R<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.127 / 0.383</td>
+</tr>
+
+</tbody></table>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(mod_splines)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>         agegroup.c             order_c                DS.c         Mill_Hill.c 
+           2.724817            1.051991            1.127248            2.527855 
+post_ind_pos_spline post_ind_neg_spline  post_PM_pos_spline  post_PM_neg_spline 
+           1.514775            2.221064            2.067359            1.432904 
+ agegroup.c:order_c 
+           1.018442 </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>mod_splines.s<span class="ot">&lt;-</span><span class="fu">lmer</span>(PM_task_lenient_av_log<span class="sc">~</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>                      agegroup.c<span class="sc">*</span>order_c<span class="sc">+</span>DS.c<span class="sc">+</span>Mill_Hill.c<span class="sc">+</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>                      </span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>                    post_ind_pos_spline.s<span class="sc">+</span>post_ind_neg_spline.s<span class="sc">+</span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>                    <span class="sc">+</span> agegroup.c<span class="sc">+</span></span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>                    post_PM_pos_spline.s<span class="sc">+</span>post_PM_neg_spline.s<span class="sc">+</span></span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>                    (<span class="dv">1</span><span class="sc">|</span>participant), </span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> long_df_merged[ (<span class="fu">is.na</span>(long_df_merged<span class="sc">$</span>MOCA)<span class="sc">|</span></span>
+<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a>                                            long_df_merged<span class="sc">$</span>MOCA<span class="sc">&gt;=</span><span class="dv">26</span>) ,],</span>
+<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">control =</span>  <span class="fu">lmerControl</span>(<span class="at">optimizer =</span> <span class="st">"bobyqa"</span>, <span class="at">optCtrl =</span></span>
+<span id="cb60-11"><a href="#cb60-11" aria-hidden="true" tabindex="-1"></a>                                           <span class="fu">list</span>(<span class="at">maxfun =</span> <span class="dv">100000</span>)))</span>
+<span id="cb60-12"><a href="#cb60-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-13"><a href="#cb60-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">summary</span>(mod_splines.s))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
 lmerModLmerTest]
@@ -905,7 +1730,7 @@ Fixed effects:
 agegroup.c             -0.53698    0.22467 113.00351  -2.390  0.01850 *  
 order_c                 0.23030    0.05686 231.57993   4.051 6.98e-05 ***
 DS.c                    0.19333    0.07215 109.17751   2.679  0.00852 ** 
-Mill_Hill.c             0.20035    0.10724 109.98884   1.868  0.06440 .  
+Mill_Hill.c             0.20035    0.10724 109.98883   1.868  0.06440 .  
 post_ind_pos_spline.s   0.02270    0.06132 307.28592   0.370  0.71153    
 post_ind_neg_spline.s   0.18843    0.07296 300.34124   2.583  0.01028 *  
 post_PM_pos_spline.s    0.16727    0.07227 303.46120   2.315  0.02131 *  
@@ -936,6 +1761,134 @@ pst_PM_ps_.
 pst_PM_ng_.           
 aggrp.c:rd_ -0.070    </code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tab_model</span>(mod_splines.s)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table style="border-collapse:collapse; border:none;">
+<tbody><tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">&nbsp;</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">PM_task_lenient_av_log</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">Predictors</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">Estimates</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">CI</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">p</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(Intercept)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.53</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.40&nbsp;–&nbsp;0.67</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">agegroup c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.54</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.98&nbsp;–&nbsp;-0.10</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.017</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">order c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.23</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.12&nbsp;–&nbsp;0.34</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">DS c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.19</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.05&nbsp;–&nbsp;0.34</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.008</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">Mill Hill c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.20</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.01&nbsp;–&nbsp;0.41</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.063</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">post ind pos spline s</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.02</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.10&nbsp;–&nbsp;0.14</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.712</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">post ind neg spline s</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.19</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.04&nbsp;–&nbsp;0.33</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.010</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">post PM pos spline s</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.17</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.03&nbsp;–&nbsp;0.31</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.021</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">post PM neg spline s</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.06</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.06&nbsp;–&nbsp;0.19</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.301</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">agegroup c × order c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.18</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.04&nbsp;–&nbsp;0.40</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.108</td>
+</tr>
+<tr>
+<td colspan="4" style="font-weight:bold; text-align:left; padding-top:.8em;">Random Effects</td>
+</tr>
+
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">σ<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.71</td>
+</tr>
+
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">τ<sub>00</sub> <sub>participant</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.29</td>
+
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">ICC</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.29</td>
+
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">N <sub>participant</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">115</td>
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">Observations</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">345</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">Marginal R<sup>2</sup> / Conditional R<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.127 / 0.383</td>
+</tr>
+
+</tbody></table>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(mod_splines)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>         agegroup.c             order_c                DS.c         Mill_Hill.c 
+           2.724817            1.051991            1.127248            2.527855 
+post_ind_pos_spline post_ind_neg_spline  post_PM_pos_spline  post_PM_neg_spline 
+           1.514775            2.221064            2.067359            1.432904 
+ agegroup.c:order_c 
+           1.018442 </code></pre>
+</div>
+</div>
+</section>
+<section id="supplementary-analyses" class="level2">
+<h2 class="anchored" data-anchor-id="supplementary-analyses">Supplementary analyses</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/8.supplementary_analyses.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 </section>
 <section id="intrusive-thoughts" class="level2">
@@ -943,7 +1896,119 @@ aggrp.c:rd_ -0.070    </code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/8.intrusive_thoughts.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------------------------------#</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Effect of general intrusive thoughts on PM</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------------------------------#</span></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>mod_thouhgts_gen_PM<span class="ot">&lt;-</span><span class="fu">lmer</span>(PM_task_lenient_av_log<span class="sc">~</span></span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>                            DS.c<span class="sc">+</span>Mill_Hill.c<span class="sc">+</span>order_c<span class="sc">+</span></span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>                            tcaq_g<span class="sc">*</span>agegroup.c<span class="sc">+</span>c_tcaq<span class="sc">*</span>agegroup.c<span class="sc">+</span></span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>                            (<span class="dv">1</span><span class="sc">|</span>participant), </span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>                          long_df_merged[ (<span class="fu">is.na</span>(long_df_merged<span class="sc">$</span>MOCA)<span class="sc">|</span>long_df_merged<span class="sc">$</span>MOCA<span class="sc">&gt;=</span><span class="dv">26</span>) ,])</span>
+<span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-10"><a href="#cb66-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tab_model</span>(mod_thouhgts_gen_PM)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table style="border-collapse:collapse; border:none;">
+<tbody><tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">&nbsp;</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">PM_task_lenient_av_log</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">Predictors</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">Estimates</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">CI</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">p</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(Intercept)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.96</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.07&nbsp;–&nbsp;2.85</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">DS c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.16</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.01&nbsp;–&nbsp;0.30</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.035</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">Mill Hill c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.14</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.07&nbsp;–&nbsp;0.35</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.197</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">order c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.26</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.14&nbsp;–&nbsp;0.37</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">tcaq g</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.01</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.02&nbsp;–&nbsp;0.00</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.172</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">agegroup c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.20</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.69&nbsp;–&nbsp;3.08</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.212</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">c tcaq</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.02</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.03&nbsp;–&nbsp;-0.01</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">tcaq g × agegroup c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.03</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.05&nbsp;–&nbsp;-0.00</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.040</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">agegroup c × c tcaq</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.00</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.02&nbsp;–&nbsp;0.02</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.939</td>
+</tr>
+<tr>
+<td colspan="4" style="font-weight:bold; text-align:left; padding-top:.8em;">Random Effects</td>
+</tr>
+
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">σ<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.69</td>
+</tr>
+
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">τ<sub>00</sub> <sub>participant</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.28</td>
+
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">ICC</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.29</td>
+
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">N <sub>participant</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">113</td>
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">Observations</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">334</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">Marginal R<sup>2</sup> / Conditional R<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.173 / 0.413</td>
+</tr>
+
+</tbody></table>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_thouhgts_gen_PM)</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
@@ -990,10 +2055,194 @@ c_tcaq      -0.217  0.143  0.135  0.012 -0.287 -0.122
 tcq_g:ggrp. -0.167  0.016  0.108 -0.031  0.232 -0.839  0.034       
 aggrp.c:c_t -0.096 -0.129  0.037  0.116  0.020 -0.236  0.199 -0.268</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(mod_thouhgts_gen_PM)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Type III Analysis of Variance Table with Satterthwaite's method
+                   Sum Sq Mean Sq NumDF  DenDF F value    Pr(&gt;F)    
+DS.c               3.1183  3.1183     1 110.27  4.4873 0.0363928 *  
+Mill_Hill.c        1.1626  1.1626     1 105.76  1.6730 0.1986690    
+order_c           14.3275 14.3275     1 221.93 20.6176 9.197e-06 ***
+tcaq_g             1.3027  1.3027     1 115.35  1.8745 0.1736150    
+agegroup.c         1.0883  1.0883     1 110.45  1.5661 0.2134154    
+c_tcaq             9.6269  9.6269     1 309.15 13.8533 0.0002348 ***
+tcaq_g:agegroup.c  2.9602  2.9602     1 113.83  4.2598 0.0412980 *  
+agegroup.c:c_tcaq  0.0041  0.0041     1 303.35  0.0059 0.9386685    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eta_squared</span>(mod_thouhgts_gen_PM, <span class="at">partial =</span> T, <span class="at">altenative =</span> <span class="st">"two.sided"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># Effect Size for ANOVA (Type III)
+
+Parameter         | Eta2 (partial) |       95% CI
+-------------------------------------------------
+DS.c              |           0.04 | [0.00, 1.00]
+Mill_Hill.c       |           0.02 | [0.00, 1.00]
+order_c           |           0.09 | [0.04, 1.00]
+tcaq_g            |           0.02 | [0.00, 1.00]
+agegroup.c        |           0.01 | [0.00, 1.00]
+c_tcaq            |           0.04 | [0.01, 1.00]
+tcaq_g:agegroup.c |           0.04 | [0.00, 1.00]
+agegroup.c:c_tcaq |       1.95e-05 | [0.00, 1.00]
+
+- One-sided CIs: upper bound fixed at [1.00].</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># run analysis for yound and older separately</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>mod_thoughts_PM_YA<span class="ot">&lt;-</span><span class="fu">lmer</span>(PM_task_lenient_av_log<span class="sc">~</span>tcaq_g<span class="sc">+</span></span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>                           DS.c<span class="sc">+</span>Mill_Hill.c<span class="sc">+</span>order_c<span class="sc">+</span>(<span class="dv">1</span><span class="sc">|</span>participant), </span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>                         long_df_merged[ (<span class="fu">is.na</span>(long_df_merged<span class="sc">$</span>MOCA)<span class="sc">|</span>long_df_merged<span class="sc">$</span>MOCA<span class="sc">&gt;=</span><span class="dv">26</span>) <span class="sc">&amp;</span></span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>                                           long_df_merged<span class="sc">$</span>agegroup<span class="sc">==</span><span class="st">"YA"</span>,])</span>
+<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a>res_YA<span class="ot">&lt;-</span><span class="fu">anova</span>(mod_thoughts_PM_YA)</span>
+<span id="cb73-8"><a href="#cb73-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-9"><a href="#cb73-9" aria-hidden="true" tabindex="-1"></a><span class="co"># correct the pvalue</span></span>
+<span id="cb73-10"><a href="#cb73-10" aria-hidden="true" tabindex="-1"></a>p_corr_YA<span class="ot">&lt;-</span>res_YA<span class="sc">$</span><span class="st">`</span><span class="at">Pr(&gt;F)</span><span class="st">`</span><span class="sc">*</span><span class="dv">2</span></span>
+<span id="cb73-11"><a href="#cb73-11" aria-hidden="true" tabindex="-1"></a>p_corr_YA</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.0242627 1.0227227 0.3776296 0.1078914</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eta_squared</span>(mod_thoughts_PM_YA, <span class="at">partial =</span> T, <span class="at">altenative =</span> <span class="st">"two.sided"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># Effect Size for ANOVA (Type III)
+
+Parameter   | Eta2 (partial) |       95% CI
+-------------------------------------------
+tcaq_g      |       7.58e-03 | [0.00, 1.00]
+DS.c        |       7.60e-03 | [0.00, 1.00]
+Mill_Hill.c |           0.03 | [0.00, 1.00]
+order_c     |           0.03 | [0.00, 1.00]
+
+- One-sided CIs: upper bound fixed at [1.00].</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now older</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>mod_thoughts_PM_OA<span class="ot">&lt;-</span><span class="fu">lmer</span>(PM_task_lenient_av_log<span class="sc">~</span>tcaq_g<span class="sc">+</span></span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>                            DS.c<span class="sc">+</span>Mill_Hill.c<span class="sc">+</span>order_c<span class="sc">+</span>(<span class="dv">1</span><span class="sc">|</span>participant), </span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>                         long_df_merged[ (<span class="fu">is.na</span>(long_df_merged<span class="sc">$</span>MOCA)<span class="sc">|</span>long_df_merged<span class="sc">$</span>MOCA<span class="sc">&gt;=</span><span class="dv">26</span>) <span class="sc">&amp;</span></span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>                                           long_df_merged<span class="sc">$</span>agegroup<span class="sc">==</span><span class="st">"OA"</span>,])</span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a>res_OA<span class="ot">&lt;-</span><span class="fu">anova</span>(mod_thoughts_PM_OA)</span>
+<span id="cb77-8"><a href="#cb77-8" aria-hidden="true" tabindex="-1"></a>p_corr_OA<span class="ot">&lt;-</span>res_OA<span class="sc">$</span><span class="st">`</span><span class="at">Pr(&gt;F)</span><span class="st">`</span><span class="sc">*</span><span class="dv">2</span></span>
+<span id="cb77-9"><a href="#cb77-9" aria-hidden="true" tabindex="-1"></a>p_corr_OA</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.0050883661 0.0005336585 0.3050827546 0.0001322403</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eta_squared</span>(mod_thoughts_PM_OA, <span class="at">partial =</span> T, <span class="at">altenative =</span> <span class="st">"two.sided"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># Effect Size for ANOVA (Type III)
+
+Parameter   | Eta2 (partial) |       95% CI
+-------------------------------------------
+tcaq_g      |           0.17 | [0.04, 1.00]
+DS.c        |           0.24 | [0.09, 1.00]
+Mill_Hill.c |           0.04 | [0.00, 1.00]
+order_c     |           0.14 | [0.05, 1.00]
+
+- One-sided CIs: upper bound fixed at [1.00].</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tab_model</span>(mod_thoughts_PM_OA)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table style="border-collapse:collapse; border:none;">
+<tbody><tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">&nbsp;</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">PM_task_lenient_av_log</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">Predictors</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">Estimates</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">CI</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">p</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(Intercept)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.17</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.00&nbsp;–&nbsp;3.34</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">tcaq g</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.03</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.04&nbsp;–&nbsp;-0.01</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>0.002</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">DS c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.39</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.20&nbsp;–&nbsp;0.59</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">Mill Hill c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.18</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">-0.07&nbsp;–&nbsp;0.43</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.148</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">order c</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.37</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">0.19&nbsp;–&nbsp;0.54</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td colspan="4" style="font-weight:bold; text-align:left; padding-top:.8em;">Random Effects</td>
+</tr>
+
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">σ<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.81</td>
+</tr>
+
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">τ<sub>00</sub> <sub>participant</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.13</td>
+
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">ICC</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.14</td>
+
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">N <sub>participant</sub></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">52</td>
+</tr><tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">Observations</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">156</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">Marginal R<sup>2</sup> / Conditional R<sup>2</sup></td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.243 / 0.350</td>
+</tr>
+
+</tbody></table>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="co"># additional analyses</span></span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/9.intrusive_thoughts.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Analyses_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Analyses_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1107,10 +2356,301 @@ aggrp.c:c_t -0.096 -0.129  0.037  0.116  0.020 -0.236  0.199 -0.268</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/9.Associational_variable_analysis.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(parameters)</span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a><span class="co"># valence after the induction on pm, without considering intrusive thoughts</span></span>
+<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a>valence_PM<span class="ot">&lt;-</span><span class="fu">lmer</span>(PM_task_lenient_av_log<span class="sc">~</span>  </span>
+<span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a>                   valence_aftIND_min_bef.s<span class="sc">+</span></span>
+<span id="cb84-6"><a href="#cb84-6" aria-hidden="true" tabindex="-1"></a>                   aft_PM_minus_after_ind.s <span class="sc">+</span> </span>
+<span id="cb84-7"><a href="#cb84-7" aria-hidden="true" tabindex="-1"></a>                   DS.c<span class="sc">+</span>Mill_Hill.c<span class="sc">+</span>order_c<span class="sc">+</span></span>
+<span id="cb84-8"><a href="#cb84-8" aria-hidden="true" tabindex="-1"></a>                   (<span class="dv">1</span><span class="sc">+</span>order_c<span class="sc">|</span>participant), </span>
+<span id="cb84-9"><a href="#cb84-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> long_df_merged[ (<span class="fu">is.na</span>(long_df_merged<span class="sc">$</span>MOCA)<span class="sc">|</span>long_df_merged<span class="sc">$</span>MOCA<span class="sc">&gt;=</span><span class="dv">26</span>),])</span>
+<span id="cb84-10"><a href="#cb84-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-11"><a href="#cb84-11" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(valence_PM)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>lavaan 0.6-21 ended normally after 93 iterations
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
+lmerModLmerTest]
+Formula: 
+PM_task_lenient_av_log ~ valence_aftIND_min_bef.s + aft_PM_minus_after_ind.s +  
+    DS.c + Mill_Hill.c + order_c + (1 + order_c | participant)
+   Data: long_df_merged[(is.na(long_df_merged$MOCA) | long_df_merged$MOCA &gt;=  
+    26), ]
+
+REML criterion at convergence: 970.3
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-2.5333 -0.4221  0.1077  0.5967  2.0686 
+
+Random effects:
+ Groups      Name        Variance Std.Dev. Corr 
+ participant (Intercept) 0.3496   0.5913        
+             order_c     0.1310   0.3620   -0.15
+ Residual                0.5848   0.7647        
+Number of obs: 345, groups:  participant, 115
+
+Fixed effects:
+                          Estimate Std. Error        df t value Pr(&gt;|t|)    
+(Intercept)                0.55427    0.06884 110.67814   8.052 1.02e-12 ***
+valence_aftIND_min_bef.s   0.17887    0.06318 295.38258   2.831 0.004957 ** 
+aft_PM_minus_after_ind.s   0.19087    0.06613 313.61951   2.886 0.004168 ** 
+DS.c                       0.22546    0.07089 110.88135   3.180 0.001908 ** 
+Mill_Hill.c                0.01216    0.07039 111.01701   0.173 0.863172    
+order_c                    0.21668    0.06103 112.46586   3.550 0.000563 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+            (Intr) v_IND_ a_PM__ DS.c   Mll_H.
+vlnc_IND__. -0.010                            
+aft_PM_m__.  0.001  0.655                     
+DS.c        -0.023  0.009 -0.013              
+Mill_Hill.c -0.004  0.012 -0.019  0.241       
+order_c     -0.065 -0.076 -0.107  0.001  0.002</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(valence_PM)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Type III Analysis of Variance Table with Satterthwaite's method
+                         Sum Sq Mean Sq NumDF  DenDF F value    Pr(&gt;F)    
+valence_aftIND_min_bef.s 4.6870  4.6870     1 295.38  8.0153 0.0049568 ** 
+aft_PM_minus_after_ind.s 4.8717  4.8717     1 313.62  8.3311 0.0041675 ** 
+DS.c                     5.9146  5.9146     1 110.88 10.1146 0.0019077 ** 
+Mill_Hill.c              0.0174  0.0174     1 111.02  0.0298 0.8631725    
+order_c                  7.3704  7.3704     1 112.47 12.6041 0.0005631 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">standardize_parameters</span>(valence_PM)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># Standardization method: refit
+
+Parameter                | Std. Coef. |        95% CI
+-----------------------------------------------------
+(Intercept)              |  -3.49e-16 | [-0.13, 0.13]
+valence aftIND min bef s |       0.17 | [ 0.05, 0.29]
+aft PM minus after ind s |       0.18 | [ 0.06, 0.30]
+DS c                     |       0.21 | [ 0.08, 0.34]
+Mill Hill c              |       0.01 | [-0.12, 0.14]
+order c                  |       0.17 | [ 0.07, 0.26]</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="co"># association between thoughts and valence</span></span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>mod_thouhgts_task_paths<span class="ot">&lt;-</span><span class="fu">lmer</span>(c_tcaq<span class="sc">~+</span>aft_PM_minus_after_ind.s<span class="sc">+</span></span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>                                valence_aftIND_min_bef.s<span class="sc">+</span></span>
+<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a>                                DS.c<span class="sc">+</span>Mill_Hill.c<span class="sc">+</span>agegroup.c<span class="sc">+</span>order_c<span class="sc">+</span></span>
+<span id="cb90-5"><a href="#cb90-5" aria-hidden="true" tabindex="-1"></a>                          (<span class="dv">1</span><span class="sc">+</span>order_c<span class="sc">|</span>participant), </span>
+<span id="cb90-6"><a href="#cb90-6" aria-hidden="true" tabindex="-1"></a>                        long_df_merged[ (<span class="fu">is.na</span>(long_df_merged<span class="sc">$</span>MOCA)<span class="sc">|</span>long_df_merged<span class="sc">$</span>MOCA<span class="sc">&gt;=</span><span class="dv">26</span>) ,])</span>
+<span id="cb90-7"><a href="#cb90-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-8"><a href="#cb90-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_thouhgts_task_paths)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
+lmerModLmerTest]
+Formula: c_tcaq ~ +aft_PM_minus_after_ind.s + valence_aftIND_min_bef.s +  
+    DS.c + Mill_Hill.c + agegroup.c + order_c + (1 + order_c |  
+    participant)
+   Data: long_df_merged[(is.na(long_df_merged$MOCA) | long_df_merged$MOCA &gt;=  
+    26), ]
+
+REML criterion at convergence: 2533.8
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.0520 -0.5328 -0.0974  0.5348  3.9270 
+
+Random effects:
+ Groups      Name        Variance Std.Dev. Corr
+ participant (Intercept) 74.0086  8.6028       
+             order_c      0.2286  0.4781   1.00
+ Residual                64.5142  8.0321       
+Number of obs: 340, groups:  participant, 115
+
+Fixed effects:
+                         Estimate Std. Error       df t value Pr(&gt;|t|)    
+(Intercept)               45.6273     0.9197 110.8387  49.609  &lt; 2e-16 ***
+aft_PM_minus_after_ind.s  -1.9044     0.6686 273.5161  -2.848  0.00473 ** 
+valence_aftIND_min_bef.s  -2.8689     0.6406 265.5432  -4.478 1.12e-05 ***
+DS.c                      -2.6595     0.9678 110.6541  -2.748  0.00700 ** 
+Mill_Hill.c               -1.6135     1.4344 110.4161  -1.125  0.26307    
+agegroup.c                -9.7266     2.9828 110.8704  -3.261  0.00148 ** 
+order_c                    0.3025     0.5409 220.6623   0.559  0.57653    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+            (Intr) a_PM__ v_IND_ DS.c   Mll_H. aggrp.
+aft_PM_m__.  0.006                                   
+vlnc_IND__.  0.000  0.673                            
+DS.c         0.004 -0.010 -0.002                     
+Mill_Hill.c -0.092 -0.014 -0.004 -0.030              
+agegroup.c   0.115  0.011  0.010  0.241 -0.760       
+order_c      0.070 -0.132 -0.091  0.008  0.000  0.003
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see help('isSingular')</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">standardize_parameters</span>(mod_thouhgts_task_paths)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># Standardization method: refit
+
+Parameter                | Std. Coef. |         95% CI
+------------------------------------------------------
+(Intercept)              |   2.52e-03 | [-0.13,  0.14]
+aft PM minus after ind s |      -0.14 | [-0.24, -0.04]
+valence aftIND min bef s |      -0.22 | [-0.31, -0.12]
+DS c                     |      -0.20 | [-0.35, -0.06]
+Mill Hill c              |      -0.12 | [-0.34,  0.09]
+agegroup c               |      -0.37 | [-0.59, -0.15]
+order c                  |       0.02 | [-0.05,  0.08]</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now thought alone</span></span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>PM_thoughts<span class="ot">&lt;-</span><span class="fu">lmer</span>(PM_task_lenient_av_log<span class="sc">~</span>  </span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>                            DS.c<span class="sc">+</span>Mill_Hill.c<span class="sc">+</span>order_c<span class="sc">+</span> </span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>                            c_tcaq<span class="sc">+</span></span>
+<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a>                            (<span class="dv">1</span><span class="sc">+</span>order_c<span class="sc">|</span>participant), </span>
+<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">data =</span> long_df_merged[ (<span class="fu">is.na</span>(long_df_merged<span class="sc">$</span>MOCA)<span class="sc">|</span>long_df_merged<span class="sc">$</span>MOCA<span class="sc">&gt;=</span><span class="dv">26</span>),])</span>
+<span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-8"><a href="#cb94-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(PM_thoughts)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
+lmerModLmerTest]
+Formula: PM_task_lenient_av_log ~ DS.c + Mill_Hill.c + order_c + c_tcaq +  
+    (1 + order_c | participant)
+   Data: long_df_merged[(is.na(long_df_merged$MOCA) | long_df_merged$MOCA &gt;=  
+    26), ]
+
+REML criterion at convergence: 955.4
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-2.48031 -0.49268  0.09905  0.56394  2.03454 
+
+Random effects:
+ Groups      Name        Variance Std.Dev. Corr 
+ participant (Intercept) 0.3719   0.6098        
+             order_c     0.1155   0.3398   -0.23
+ Residual                0.5770   0.7596        
+Number of obs: 340, groups:  participant, 115
+
+Fixed effects:
+              Estimate Std. Error         df t value Pr(&gt;|t|)    
+(Intercept)   1.377658   0.228719 280.411869   6.023 5.35e-09 ***
+DS.c          0.193277   0.072565 111.123987   2.663 0.008883 ** 
+Mill_Hill.c  -0.077733   0.076042 123.446463  -1.022 0.308670    
+order_c       0.247571   0.059714 113.742347   4.146 6.54e-05 ***
+c_tcaq       -0.018031   0.004736 297.218111  -3.807 0.000171 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+            (Intr) DS.c   Mll_H. ordr_c
+DS.c        -0.122                     
+Mill_Hill.c -0.325  0.267              
+order_c     -0.025  0.005  0.000       
+c_tcaq      -0.952  0.120  0.339 -0.006</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(PM_thoughts)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Type III Analysis of Variance Table with Satterthwaite's method
+            Sum Sq Mean Sq NumDF  DenDF F value    Pr(&gt;F)    
+DS.c        4.0932  4.0932     1 111.12  7.0942 0.0088828 ** 
+Mill_Hill.c 0.6029  0.6029     1 123.45  1.0450 0.3086698    
+order_c     9.9174  9.9174     1 113.74 17.1886 6.545e-05 ***
+c_tcaq      8.3644  8.3644     1 297.22 14.4970 0.0001705 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="fu">standardize_parameters</span>(PM_thoughts)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># Standardization method: refit
+
+Parameter   | Std. Coef. |         95% CI
+-----------------------------------------
+(Intercept) |   1.46e-03 | [-0.13,  0.13]
+DS c        |       0.18 | [ 0.05,  0.32]
+Mill Hill c |      -0.07 | [-0.22,  0.07]
+order c     |       0.19 | [ 0.10,  0.28]
+c tcaq      |      -0.23 | [-0.34, -0.11]</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">standardize_parameters</span>(PM_thoughts)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># Standardization method: refit
+
+Parameter   | Std. Coef. |         95% CI
+-----------------------------------------
+(Intercept) |   1.46e-03 | [-0.13,  0.13]
+DS c        |       0.18 | [ 0.05,  0.32]
+Mill Hill c |      -0.07 | [-0.22,  0.07]
+order c     |       0.19 | [ 0.10,  0.28]
+c tcaq      |      -0.23 | [-0.34, -0.11]</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>long_df_merged<span class="sc">$</span>valence_aftIND_agegroup<span class="ot">&lt;-</span>long_df_merged<span class="sc">$</span>valence_aftIND_min_bef.s<span class="sc">*</span>long_df_merged<span class="sc">$</span>agegroup.c</span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>long_df_merged<span class="sc">$</span>valence_aftPM_agegroup<span class="ot">&lt;-</span>long_df_merged<span class="sc">$</span>aft_PM_minus_after_ind.s<span class="sc">*</span>long_df_merged<span class="sc">$</span>agegroup.c</span>
+<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-4"><a href="#cb102-4" aria-hidden="true" tabindex="-1"></a>associational_variable_analysis <span class="ot">&lt;-</span> <span class="fu">paste</span>( <span class="st">'</span></span>
+<span id="cb102-5"><a href="#cb102-5" aria-hidden="true" tabindex="-1"></a><span class="st">  level: 1</span></span>
+<span id="cb102-6"><a href="#cb102-6" aria-hidden="true" tabindex="-1"></a><span class="st">    PM_task_lenient_av_log ~ c*valence_aftIND_min_bef.s + DS.c+Mill_Hill.c+agegroup.c+order_c+valence_aftIND_agegroup+valence_aftPM_agegroup</span></span>
+<span id="cb102-7"><a href="#cb102-7" aria-hidden="true" tabindex="-1"></a><span class="st">    PM_task_lenient_av_log ~ c2*aft_PM_minus_after_ind.s+DS.c+Mill_Hill.c+agegroup.c+order_c+valence_aftIND_agegroup+valence_aftPM_agegroup</span></span>
+<span id="cb102-8"><a href="#cb102-8" aria-hidden="true" tabindex="-1"></a><span class="st">    c_tcaq ~ a*valence_aftIND_min_bef.s+DS.c+Mill_Hill.c+agegroup.c+order_c+valence_aftIND_agegroup</span></span>
+<span id="cb102-9"><a href="#cb102-9" aria-hidden="true" tabindex="-1"></a><span class="st">   c_tcaq ~ a2*aft_PM_minus_after_ind.s+DS.c+Mill_Hill.c+agegroup.c+order_c+valence_aftPM_agegroup</span></span>
+<span id="cb102-10"><a href="#cb102-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-11"><a href="#cb102-11" aria-hidden="true" tabindex="-1"></a><span class="st">    PM_task_lenient_av_log ~ b*c_tcaq +DS.c+Mill_Hill.c+agegroup.c+order_c</span></span>
+<span id="cb102-12"><a href="#cb102-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-13"><a href="#cb102-13" aria-hidden="true" tabindex="-1"></a><span class="st">  level: 2   # random intercepts only</span></span>
+<span id="cb102-14"><a href="#cb102-14" aria-hidden="true" tabindex="-1"></a><span class="st">    # estimate the variance at level two </span></span>
+<span id="cb102-15"><a href="#cb102-15" aria-hidden="true" tabindex="-1"></a><span class="st">    PM_task_lenient_av_log ~~ PM_task_lenient_av_log</span></span>
+<span id="cb102-16"><a href="#cb102-16" aria-hidden="true" tabindex="-1"></a><span class="st">    c_tcaq~~ c_tcaq</span></span>
+<span id="cb102-17"><a href="#cb102-17" aria-hidden="true" tabindex="-1"></a><span class="st">      #valence_aft_ind ~~ valence_aft_ind</span></span>
+<span id="cb102-18"><a href="#cb102-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-19"><a href="#cb102-19" aria-hidden="true" tabindex="-1"></a><span class="st">    # (optional) valence_aft_ind ~~ c_tcaq + PM_task_lenient_av</span></span>
+<span id="cb102-20"><a href="#cb102-20" aria-hidden="true" tabindex="-1"></a><span class="st">    # (optional) aft_PM_minus_after_ind ~~ c_tcaq + PM_task_lenient_av</span></span>
+<span id="cb102-21"><a href="#cb102-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-22"><a href="#cb102-22" aria-hidden="true" tabindex="-1"></a><span class="st">  # within-level indirects and totals</span></span>
+<span id="cb102-23"><a href="#cb102-23" aria-hidden="true" tabindex="-1"></a><span class="st">    a2b := a2*b; </span></span>
+<span id="cb102-24"><a href="#cb102-24" aria-hidden="true" tabindex="-1"></a><span class="st">    ab := a*b;</span></span>
+<span id="cb102-25"><a href="#cb102-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-26"><a href="#cb102-26" aria-hidden="true" tabindex="-1"></a><span class="st">  total_valence := c + ab </span></span>
+<span id="cb102-27"><a href="#cb102-27" aria-hidden="true" tabindex="-1"></a><span class="st">  total_valence2 := c2 + a2b </span></span>
+<span id="cb102-28"><a href="#cb102-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-29"><a href="#cb102-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-30"><a href="#cb102-30" aria-hidden="true" tabindex="-1"></a><span class="st">'</span></span>
+<span id="cb102-31"><a href="#cb102-31" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb102-32"><a href="#cb102-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-33"><a href="#cb102-33" aria-hidden="true" tabindex="-1"></a>fit_assoc_path <span class="ot">&lt;-</span> <span class="fu">sem</span>(<span class="at">model =</span> associational_variable_analysis,</span>
+<span id="cb102-34"><a href="#cb102-34" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> long_df_merged[ (<span class="fu">is.na</span>(long_df_merged<span class="sc">$</span>MOCA)<span class="sc">|</span>long_df_merged<span class="sc">$</span>MOCA<span class="sc">&gt;=</span><span class="dv">26</span>) ,], <span class="at">cluster =</span> <span class="st">"participant"</span>,</span>
+<span id="cb102-35"><a href="#cb102-35" aria-hidden="true" tabindex="-1"></a>                     <span class="at">estimator =</span> <span class="st">"MLR"</span>,</span>
+<span id="cb102-36"><a href="#cb102-36" aria-hidden="true" tabindex="-1"></a>                     <span class="at">missing =</span> <span class="st">"ML"</span>)</span>
+<span id="cb102-37"><a href="#cb102-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-38"><a href="#cb102-38" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(</span>
+<span id="cb102-39"><a href="#cb102-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(fit_assoc_path, <span class="at">std=</span>T, <span class="at">fit.measures =</span> T)</span>
+<span id="cb102-40"><a href="#cb102-40" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>lavaan 0.6-19 ended normally after 93 iterations
 
   Estimator                                         ML
   Optimization method                           NLMINB
@@ -1123,23 +2663,23 @@ aggrp.c:c_t -0.096 -0.129  0.037  0.116  0.020 -0.236  0.199 -0.268</code></pre>
 
 Model Test User Model:
                                               Standard      Scaled
-  Test Statistic                                 1.662       1.458
+  Test Statistic                                 0.000       0.000
   Degrees of freedom                                 1           1
-  P-value (Chi-square)                           0.197       0.227
-  Scaling correction factor                                  1.140
+  P-value (Chi-square)                           1.000       1.000
+  Scaling correction factor                                  3.495
     Yuan-Bentler correction (Mplus variant)                       
 
 Model Test Baseline Model:
 
-  Test statistic                               127.913     121.958
+  Test statistic                               107.109      90.797
   Degrees of freedom                                18          18
   P-value                                        0.000       0.000
-  Scaling correction factor                                  1.049
+  Scaling correction factor                                  1.180
 
 User Model versus Baseline Model:
 
-  Comparative Fit Index (CFI)                    0.994       0.996
-  Tucker-Lewis Index (TLI)                       0.892       0.921
+  Comparative Fit Index (CFI)                    1.000       1.000
+  Tucker-Lewis Index (TLI)                       1.202       1.247
                                                                   
   Robust Comparative Fit Index (CFI)                            NA
   Robust Tucker-Lewis Index (TLI)                               NA
@@ -1149,8 +2689,8 @@ Loglikelihood and Information Criteria:
   Loglikelihood user model (H0)              -1739.077   -1739.077
   Scaling correction factor                                  1.124
       for the MLR correction                                      
-  Loglikelihood unrestricted model (H1)      -1738.245   -1738.245
-  Scaling correction factor                                  1.124
+  Loglikelihood unrestricted model (H1)      -1749.960   -1749.960
+  Scaling correction factor                                  1.222
       for the MLR correction                                      
                                                                   
   Akaike (AIC)                                3524.153    3524.153
@@ -1159,11 +2699,11 @@ Loglikelihood and Information Criteria:
 
 Root Mean Square Error of Approximation:
 
-  RMSEA                                          0.044       0.036
+  RMSEA                                          0.000       0.000
   90 Percent confidence interval - lower         0.000       0.000
-  90 Percent confidence interval - upper         0.158       0.146
-  P-value H_0: RMSEA &lt;= 0.050                    0.372       0.423
-  P-value H_0: RMSEA &gt;= 0.080                    0.419       0.360
+  90 Percent confidence interval - upper         0.000       0.000
+  P-value H_0: RMSEA &lt;= 0.050                    1.000       1.000
+  P-value H_0: RMSEA &gt;= 0.080                    0.000       0.000
                                                                   
   Robust RMSEA                                                  NA
   90 Percent confidence interval - lower                        NA
@@ -1173,8 +2713,8 @@ Root Mean Square Error of Approximation:
 
 Standardized Root Mean Square Residual (corr metric):
 
-  SRMR (within covariance matrix)                0.002       0.002
-  SRMR (between covariance matrix)               0.106       0.106
+  SRMR (within covariance matrix)                0.009       0.009
+  SRMR (between covariance matrix)               0.000       0.000
 
 Parameter Estimates:
 
@@ -1225,14 +2765,14 @@ Regressions:
     0.024
     0.033
    -0.209
-    0.064
+    0.063
          
    -0.259
 
 Variances:
                    Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
    .PM_tsk_lnnt_v_    0.675    0.071    9.498    0.000    0.675    0.792
-   .c_tcaq           64.372    9.968    6.458    0.000   64.372    0.612
+   .c_tcaq           64.372    9.968    6.458    0.000   64.372    0.611
 
 
 Level 2 [participant]:
@@ -1254,6 +2794,10 @@ Defined Parameters:
     total_valence     0.176    0.077    2.265    0.024    0.176    0.190
     total_valence2    0.194    0.067    2.877    0.004    0.194    0.209</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="co">#------------------------------------------------------------------------------#</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 </section>
 <section id="create-a-correlation-table-with-all-the-variables" class="level2">
@@ -1261,24 +2805,24 @@ Defined Parameters:
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>df_for_corr <span class="ot">&lt;-</span> long_df_merged <span class="sc">%&gt;%</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">group_by</span>(participant) <span class="sc">%&gt;%</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(</span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="at">agegroup =</span> <span class="fu">first</span>(agegroup),</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="at">education_y =</span> <span class="fu">first</span>(education_y),</span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="at">health =</span> <span class="fu">first</span>(health),</span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="at">fluid_intelligence =</span> <span class="fu">first</span>(DS), </span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="at">crystallized_intelligence =</span> <span class="fu">first</span>(Mill_Hill),</span>
-<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="at">general_intrusive_thoughts =</span> <span class="fu">first</span>(tcaq_g),</span>
-<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="at">task_related_intrusive_thoughts =</span> <span class="fu">mean</span>(c_tcaq, <span class="at">na.rm =</span> T),</span>
-<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="at">PM_performance =</span> <span class="fu">mean</span>(PM_task_lenient_av, <span class="at">na.rm =</span> T),</span>
-<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="co">#baseline_valence = first(baseline_valence),</span></span>
-<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a><span class="at">post_induction_valence_change =</span> <span class="fu">mean</span>(valence_aftIND_min_bef, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a><span class="at">post_task_valence_change =</span> <span class="fu">mean</span>(aft_PM_minus_after_ind, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_for_corr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a>df_for_corr <span class="ot">&lt;-</span> long_df_merged <span class="sc">%&gt;%</span></span>
+<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb105-3"><a href="#cb105-3" aria-hidden="true" tabindex="-1"></a><span class="fu">group_by</span>(participant) <span class="sc">%&gt;%</span></span>
+<span id="cb105-4"><a href="#cb105-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(</span>
+<span id="cb105-5"><a href="#cb105-5" aria-hidden="true" tabindex="-1"></a><span class="at">agegroup =</span> <span class="fu">first</span>(agegroup),</span>
+<span id="cb105-6"><a href="#cb105-6" aria-hidden="true" tabindex="-1"></a><span class="at">education_y =</span> <span class="fu">first</span>(education_y),</span>
+<span id="cb105-7"><a href="#cb105-7" aria-hidden="true" tabindex="-1"></a><span class="at">health =</span> <span class="fu">first</span>(health),</span>
+<span id="cb105-8"><a href="#cb105-8" aria-hidden="true" tabindex="-1"></a><span class="at">fluid_intelligence =</span> <span class="fu">first</span>(DS), </span>
+<span id="cb105-9"><a href="#cb105-9" aria-hidden="true" tabindex="-1"></a><span class="at">crystallized_intelligence =</span> <span class="fu">first</span>(Mill_Hill),</span>
+<span id="cb105-10"><a href="#cb105-10" aria-hidden="true" tabindex="-1"></a><span class="at">general_intrusive_thoughts =</span> <span class="fu">first</span>(tcaq_g),</span>
+<span id="cb105-11"><a href="#cb105-11" aria-hidden="true" tabindex="-1"></a><span class="at">task_related_intrusive_thoughts =</span> <span class="fu">mean</span>(c_tcaq, <span class="at">na.rm =</span> T),</span>
+<span id="cb105-12"><a href="#cb105-12" aria-hidden="true" tabindex="-1"></a><span class="at">PM_performance =</span> <span class="fu">mean</span>(PM_task_lenient_av, <span class="at">na.rm =</span> T),</span>
+<span id="cb105-13"><a href="#cb105-13" aria-hidden="true" tabindex="-1"></a><span class="co">#baseline_valence = first(baseline_valence),</span></span>
+<span id="cb105-14"><a href="#cb105-14" aria-hidden="true" tabindex="-1"></a><span class="at">post_induction_valence_change =</span> <span class="fu">mean</span>(valence_aftIND_min_bef, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb105-15"><a href="#cb105-15" aria-hidden="true" tabindex="-1"></a><span class="at">post_task_valence_change =</span> <span class="fu">mean</span>(aft_PM_minus_after_ind, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb105-16"><a href="#cb105-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb105-17"><a href="#cb105-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb105-18"><a href="#cb105-18" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_for_corr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>tibble [120 × 11] (S3: tbl_df/tbl/data.frame)
@@ -1296,20 +2840,20 @@ Defined Parameters:
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># confert age group to numeric</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>df_for_corr<span class="sc">$</span>agegroup<span class="ot">&lt;-</span><span class="fu">ifelse</span>(df_for_corr<span class="sc">$</span>agegroup<span class="sc">==</span><span class="st">"YA"</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>)</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>cor_tbl<span class="ot">&lt;-</span><span class="fu">corr.test</span>(df_for_corr[, <span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(df_for_corr)], <span class="at">use =</span> <span class="st">"pairwise"</span>, <span class="at">method =</span> <span class="st">"pearson"</span>, <span class="at">adjust =</span> <span class="st">"none"</span>)</span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>corr_table <span class="ot">&lt;-</span> <span class="fu">round</span>(cor_tbl<span class="sc">$</span>r, <span class="dv">2</span>)</span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>p_table <span class="ot">&lt;-</span> <span class="fu">round</span>(cor_tbl<span class="sc">$</span>p, <span class="dv">4</span>)</span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sink</span>(<span class="st">"correlation_table.txt"</span>)</span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Correlation matrix</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">round</span>(cor_tbl<span class="sc">$</span>r, <span class="dv">2</span>))</span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">P-value matrix</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">round</span>(cor_tbl<span class="sc">$</span>p, <span class="dv">4</span>))</span>
-<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a><span class="fu">sink</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="co"># confert age group to numeric</span></span>
+<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a>df_for_corr<span class="sc">$</span>agegroup<span class="ot">&lt;-</span><span class="fu">ifelse</span>(df_for_corr<span class="sc">$</span>agegroup<span class="sc">==</span><span class="st">"YA"</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>)</span>
+<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a>cor_tbl<span class="ot">&lt;-</span><span class="fu">corr.test</span>(df_for_corr[, <span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(df_for_corr)], <span class="at">use =</span> <span class="st">"pairwise"</span>, <span class="at">method =</span> <span class="st">"pearson"</span>, <span class="at">adjust =</span> <span class="st">"none"</span>)</span>
+<span id="cb107-4"><a href="#cb107-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-5"><a href="#cb107-5" aria-hidden="true" tabindex="-1"></a>corr_table <span class="ot">&lt;-</span> <span class="fu">round</span>(cor_tbl<span class="sc">$</span>r, <span class="dv">2</span>)</span>
+<span id="cb107-6"><a href="#cb107-6" aria-hidden="true" tabindex="-1"></a>p_table <span class="ot">&lt;-</span> <span class="fu">round</span>(cor_tbl<span class="sc">$</span>p, <span class="dv">4</span>)</span>
+<span id="cb107-7"><a href="#cb107-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-8"><a href="#cb107-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sink</span>(<span class="st">"correlation_table.txt"</span>)</span>
+<span id="cb107-9"><a href="#cb107-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Correlation matrix</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb107-10"><a href="#cb107-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">round</span>(cor_tbl<span class="sc">$</span>r, <span class="dv">2</span>))</span>
+<span id="cb107-11"><a href="#cb107-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-12"><a href="#cb107-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">P-value matrix</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb107-13"><a href="#cb107-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">round</span>(cor_tbl<span class="sc">$</span>p, <span class="dv">4</span>))</span>
+<span id="cb107-14"><a href="#cb107-14" aria-hidden="true" tabindex="-1"></a><span class="fu">sink</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>

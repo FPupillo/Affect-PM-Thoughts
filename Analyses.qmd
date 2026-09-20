@@ -59,10 +59,7 @@ lab_valence <- ggplot2::as_labeller(c(
 #| warning: false
 
 
-
-# get the helper function to extract the rt
 source("helper_functions/extract_rt.R")
-
 # now source the script that extract the data
 source("R/1.extract_files.R")
 
@@ -128,7 +125,6 @@ for (n in 1:nrow(df_wide)){ # loop through the observations (conditions)
   
   
 }
-
 
 # get the spss file
 spss_data<-read.csv("PM final data.csv"  )
@@ -197,6 +193,7 @@ Compare the sociodemographics between young and old
 ```{r}
 #| message: false
 #| warning: false
+#| 
 source("R/3.compare_sociodemo.R")
 
 summary(mod_health)
@@ -249,6 +246,90 @@ source("R/5.valence_preproc.R")
 ```{r}
 #| message: false
 #| warning: false
+
+# Group data by Condition, calculate mean and SD
+summary_table_valence <-   long_df_valence_split %>%
+  group_by(valence_measure, cond, agegroup) %>%
+  summarize(
+    Mean = mean(valence_value, na.rm = TRUE),
+    SD = sd(valence_value, na.rm = TRUE),
+    .groups = 'drop'  # To avoid message about grouping
+  )
+
+
+summary_table_valence
+
+
+# analyze valence
+long_df_valence_split$agegroup.c<-ifelse(long_df_valence_split$agegroup=="YA", -0.5, 0.5)
+
+mod_valence<-lmer(valence_value~agegroup*valence_measure*cond +(1|participant), 
+                  data = long_df_valence_split)
+
+
+summary(mod_valence)
+tab_model(mod_valence)
+anova(mod_valence )
+
+eta_squared(mod_valence, partial=T,alternative = "two.sided" )
+
+emm_mean<-emmeans(mod_valence, ~ valence_measure*agegroup | cond )
+
+# 2) Omnibus tests within each valence_measure (does cond matter? any agxcond interaction?)
+joint_tests(emm_mean, by = "valence_measure")
+
+
+# 3) Pairwise contrasts of cond within each agegroup and measure (your main request)
+pairs(emm_mean,
+      by     = c( "cond", "valence_measure"),
+      adjust = "bonferroni")
+
+# now break down the valence by condition interaction
+emm_mean2<-emmeans(mod_valence, ~ cond | valence_measure )
+
+pairs(emm_mean2,
+      
+      adjust = "bonferroni")
+
+print(emm_mean2)
+
+print(
+emmip(mod_valence, agegroup ~ cond | valence_measure, CIs = TRUE) +
+  theme_minimal() + labs(y = "Estimated valence", x = "Condition", color = "Age group")+
+  # scale_color_manual(values = c(YA = "darkorange", OA = "darkgreen")) +
+  scale_color_manual(values = okabe_ito,
+                     labels = c(YA = "YA", OA = "OA")) +
+  geom_hline(aes(yintercept = 0), color = "black")  +
+  
+  #scale_fill_manual(values = c(YA = "darkorange", OA = "darkgreen")) +  # CI ribbons
+  scale_fill_manual(values = okabe_ito,
+                    labels = c(YA = "YA", OA = "OA")) +  # CI ribbons
+  
+  theme_classic()+params+
+  facet_wrap(
+    ~ valence_measure,
+    labeller = lab_valence
+  )
+)
+
+emmip(mod_valence, agegroup ~ cond | valence_measure, CIs = TRUE) +
+  theme_minimal() + labs(y = "Estimated valence", x = "Condition", color = "Age group")+
+  # scale_color_manual(values = c(YA = "darkorange", OA = "darkgreen")) +
+  scale_color_manual(values = okabe_ito,
+                     labels = c(YA = "YA", OA = "OA")) +
+  geom_hline(aes(yintercept = 0), color = "black")  +
+  
+  #scale_fill_manual(values = c(YA = "darkorange", OA = "darkgreen")) +  # CI ribbons
+  scale_fill_manual(values = okabe_ito,
+                    labels = c(YA = "YA", OA = "OA")) +  # CI ribbons
+  
+  theme_classic()+
+  facet_wrap(
+    ~ valence_measure,
+    labeller = lab_valence
+  )
+
+
 source("R/6.valence_analysis.R")
 ```
 
@@ -268,25 +349,236 @@ source("R/6S.arousal_analysis.R")
 #| warning: false
 source("helper_functions/logit_transform.R")
 
-
 source("R/7.PM_main_analysis.R")
 
+# regression with all the control variables
+reg.s<-lmer(PM_task_lenient_av_log~order_c*agegroup.c+DS.c+Mill_Hill.c+aft_PM_minus_after_ind.s*agegroup.c + 
+              valence_aftIND_min_bef.s*agegroup.c+(1+order_c|participant), 
+            data = long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26),])
+summary(reg.s)
+
+tab_model(reg.s, file = "main_regression_table.html")
+
+
+anova(reg.s)
+
+
+vif(reg.s)
+
+eta_squared(reg.s, partial = T, alternative = "two.sided")
 
 ```
+## Spline analysis
+```{r}
+#------------------------------------------------------------------------------#
+# Spline analysis
+
+# now we want to know whether it is positive or negative side that drives the effect
+long_df_merged$post_ind_pos_spline<-
+  ifelse(long_df_merged$valence_aftIND_min_bef>0,
+         long_df_merged$valence_aftIND_min_bef, 0 )
+
+long_df_merged$post_ind_neg_spline<- 
+  ifelse(long_df_merged$valence_aftIND_min_bef<0,
+         long_df_merged$valence_aftIND_min_bef, 0 )
+
+long_df_merged$post_PM_pos_spline<- 
+  ifelse(long_df_merged$aft_PM_minus_after_ind>0,
+         long_df_merged$aft_PM_minus_after_ind, 0 )
+
+long_df_merged$post_PM_neg_spline<- 
+  ifelse(long_df_merged$aft_PM_minus_after_ind<0,
+         long_df_merged$aft_PM_minus_after_ind, 0 )
+
+# scale the predictors
+long_df_merged$post_ind_pos_spline.s<-scale(long_df_merged$post_ind_pos_spline)
+long_df_merged$post_ind_neg_spline.s<-scale(long_df_merged$post_ind_neg_spline)
+long_df_merged$post_PM_pos_spline.s<-scale(long_df_merged$post_PM_pos_spline)
+long_df_merged$post_PM_neg_spline.s<-scale(long_df_merged$post_PM_neg_spline)
+
+mod_splines<-lmer(PM_task_lenient_av_log~
+                    agegroup.c*order_c+DS.c+Mill_Hill.c+
+                    post_ind_pos_spline+post_ind_neg_spline+
+                    + agegroup.c+
+                    post_PM_pos_spline+post_PM_neg_spline+
+                    (1|participant), 
+                  data = long_df_merged[ (is.na(long_df_merged$MOCA)|
+                                            long_df_merged$MOCA>=26) ,],
+                  control =  lmerControl(optimizer = "bobyqa",
+                                         optCtrl = list(maxfun = 100000)))
+
+tab_model(mod_splines)
+
+vif(mod_splines)
 
 
+mod_splines.s<-lmer(PM_task_lenient_av_log~
+                      agegroup.c*order_c+DS.c+Mill_Hill.c+
+                      
+                    post_ind_pos_spline.s+post_ind_neg_spline.s+
+                    + agegroup.c+
+                    post_PM_pos_spline.s+post_PM_neg_spline.s+
+                    (1|participant), 
+                  data = long_df_merged[ (is.na(long_df_merged$MOCA)|
+                                            long_df_merged$MOCA>=26) ,],
+                  control =  lmerControl(optimizer = "bobyqa", optCtrl =
+                                           list(maxfun = 100000)))
+
+print(summary(mod_splines.s))
+tab_model(mod_splines.s)
+
+vif(mod_splines)
+```
+
+## Supplementary analyses
+```{r}
+source("R/8.supplementary_analyses.R")
+```
 
 ## Intrusive thoughts
 ```{r}
 #| message: false
 #| warning: false
-source("R/8.intrusive_thoughts.R")
+
+#------------------------------------------------------------------------------#
+# Effect of general intrusive thoughts on PM
+#------------------------------------------------------------------------------#
+mod_thouhgts_gen_PM<-lmer(PM_task_lenient_av_log~
+                            DS.c+Mill_Hill.c+order_c+
+                            tcaq_g*agegroup.c+c_tcaq*agegroup.c+
+                            (1|participant), 
+                          long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26) ,])
+
+tab_model(mod_thouhgts_gen_PM)
+print(
+summary(mod_thouhgts_gen_PM)
+)
+anova(mod_thouhgts_gen_PM)
+
+eta_squared(mod_thouhgts_gen_PM, partial = T, altenative = "two.sided")
+
+# run analysis for yound and older separately
+mod_thoughts_PM_YA<-lmer(PM_task_lenient_av_log~tcaq_g+
+                           DS.c+Mill_Hill.c+order_c+(1|participant), 
+                         long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26) &
+                                           long_df_merged$agegroup=="YA",])
+
+res_YA<-anova(mod_thoughts_PM_YA)
+
+# correct the pvalue
+p_corr_YA<-res_YA$`Pr(>F)`*2
+p_corr_YA
+
+eta_squared(mod_thoughts_PM_YA, partial = T, altenative = "two.sided")
+# now older
+mod_thoughts_PM_OA<-lmer(PM_task_lenient_av_log~tcaq_g+
+                            DS.c+Mill_Hill.c+order_c+(1|participant), 
+                         long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26) &
+                                           long_df_merged$agegroup=="OA",])
+
+res_OA<-anova(mod_thoughts_PM_OA)
+p_corr_OA<-res_OA$`Pr(>F)`*2
+p_corr_OA
+
+eta_squared(mod_thoughts_PM_OA, partial = T, altenative = "two.sided")
+
+tab_model(mod_thoughts_PM_OA)
+
+# additional analyses
+source("R/9.intrusive_thoughts.R")
 ```
 
 ## Associational variable analyses
 ```{r}
 #| warning: false
-source("R/9.Associational_variable_analysis.R")
+
+library(parameters)
+
+# valence after the induction on pm, without considering intrusive thoughts
+valence_PM<-lmer(PM_task_lenient_av_log~  
+                   valence_aftIND_min_bef.s+
+                   aft_PM_minus_after_ind.s + 
+                   DS.c+Mill_Hill.c+order_c+
+                   (1+order_c|participant), 
+                 data = long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26),])
+
+summary(valence_PM)
+
+anova(valence_PM)
+
+standardize_parameters(valence_PM)
+
+# association between thoughts and valence
+mod_thouhgts_task_paths<-lmer(c_tcaq~+aft_PM_minus_after_ind.s+
+                                valence_aftIND_min_bef.s+
+                                DS.c+Mill_Hill.c+agegroup.c+order_c+
+                          (1+order_c|participant), 
+                        long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26) ,])
+
+summary(mod_thouhgts_task_paths)
+standardize_parameters(mod_thouhgts_task_paths)
+
+
+
+# now thought alone
+PM_thoughts<-lmer(PM_task_lenient_av_log~  
+                            DS.c+Mill_Hill.c+order_c+ 
+                            c_tcaq+
+                            (1+order_c|participant), 
+                          data = long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26),])
+
+summary(PM_thoughts)
+anova(PM_thoughts)
+standardize_parameters(PM_thoughts)
+
+
+standardize_parameters(PM_thoughts)
+
+
+
+long_df_merged$valence_aftIND_agegroup<-long_df_merged$valence_aftIND_min_bef.s*long_df_merged$agegroup.c
+long_df_merged$valence_aftPM_agegroup<-long_df_merged$aft_PM_minus_after_ind.s*long_df_merged$agegroup.c
+
+associational_variable_analysis <- paste( '
+  level: 1
+    PM_task_lenient_av_log ~ c*valence_aftIND_min_bef.s + DS.c+Mill_Hill.c+agegroup.c+order_c+valence_aftIND_agegroup+valence_aftPM_agegroup
+    PM_task_lenient_av_log ~ c2*aft_PM_minus_after_ind.s+DS.c+Mill_Hill.c+agegroup.c+order_c+valence_aftIND_agegroup+valence_aftPM_agegroup
+    c_tcaq ~ a*valence_aftIND_min_bef.s+DS.c+Mill_Hill.c+agegroup.c+order_c+valence_aftIND_agegroup
+   c_tcaq ~ a2*aft_PM_minus_after_ind.s+DS.c+Mill_Hill.c+agegroup.c+order_c+valence_aftPM_agegroup
+
+    PM_task_lenient_av_log ~ b*c_tcaq +DS.c+Mill_Hill.c+agegroup.c+order_c
+
+  level: 2   # random intercepts only
+    # estimate the variance at level two 
+    PM_task_lenient_av_log ~~ PM_task_lenient_av_log
+    c_tcaq~~ c_tcaq
+      #valence_aft_ind ~~ valence_aft_ind
+
+    # (optional) valence_aft_ind ~~ c_tcaq + PM_task_lenient_av
+    # (optional) aft_PM_minus_after_ind ~~ c_tcaq + PM_task_lenient_av
+
+  # within-level indirects and totals
+    a2b := a2*b; 
+    ab := a*b;
+
+  total_valence := c + ab 
+  total_valence2 := c2 + a2b 
+
+
+'
+)
+
+fit_assoc_path <- sem(model = associational_variable_analysis,
+                     data = long_df_merged[ (is.na(long_df_merged$MOCA)|long_df_merged$MOCA>=26) ,], cluster = "participant",
+                     estimator = "MLR",
+                     missing = "ML")
+
+print(
+  summary(fit_assoc_path, std=T, fit.measures = T)
+)
+
+#------------------------------------------------------------------------------#
+
 ```
 
 ## Create a correlation table with all the variables
